@@ -132,7 +132,7 @@ Remove:
 
 ```{r rm-mitos-chloros}
 # Remind myself of tax table 
-#View(tax_mat)
+
 
 # Make new physeq without chloroplasts
 noChloros_physeq <- 
@@ -219,14 +219,12 @@ control_taxa <-
 controlASV_physeq %>%
  tax_table() %>%
  data.frame()
-view(control_taxa)
 
-write.csv(df, 'data/control_taxa.csv')
+write.csv(df, 'combined_data/data/control_taxa.csv')
 
-# Would only like to keep ASV 1168, 1293, 1889, 2084, 3346, 3573, everything else is trash
+# Would only like to keep ASV 1089, 1596, 1760, 2802, 2989, 982 everything else is trash
 controlASVs_toREMOVE <- 
-  dplyr::setdiff(control_ASVs$ASV, c("ASV_1168", "ASV_1293", "ASV_1889",
-                                     "ASV_2084", "ASV_3346", "ASV_3573"))
+  dplyr::setdiff(control_ASVs$ASV, c("ASV_7"))
 # double check 
 length(controlASVs_toREMOVE)
 

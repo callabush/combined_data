@@ -57,15 +57,27 @@ load("combined_data/data/angert_meta_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_angert <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
+#Trim 94 bp of right of sequence
+colnames(noChimeras_ASV_table_angert) <- 
+  substr(colnames(noChimeras_ASV_table_angert), 1, 142)
+
 # Load Soh ASV table
 load("combined_data/data/Soh_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_soh <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
+#Trim 8 bp of left of sequence
+colnames(noChimeras_ASV_table_soh) <- 
+  substr(colnames(noChimeras_ASV_table_soh), 8, 151)
+
 # Load Bikrim ASV table
 load("combined_data/data/Bikrim_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_bikrim <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
+
+#Trim 146 bp of left of sequence
+colnames(noChimeras_ASV_table_bikrim) <- 
+  substr(colnames(noChimeras_ASV_table_bikrim), 146, 289)
 
 # Load Alessandro ASV tables
 ## Load 2011 Illumina run
@@ -73,10 +85,18 @@ load("combined_data/data/Alessandro_2011/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_alessandro_2011 <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
+#Trim 163 bp of left of sequence
+colnames(noChimeras_ASV_table_alessandro_2011) <- 
+  substr(colnames(noChimeras_ASV_table_alessandro_2011), 163, 305)
+
 ## Load 2017 Illumina run 
 load("combined_data/data/Alessandro_2017/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_alessandro_2017 <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
+
+#Trim  bp of left of sequence
+colnames(noChimeras_ASV_table_alessandro_2017) <- 
+  substr(colnames(noChimeras_ASV_table_alessandro_2017), 185, 327)
 
 ```
 
@@ -122,7 +142,7 @@ rownames(taxa_print) <- NULL
 Below, we will prepare the following: 
 
 1. Two ASV Count tables: 
-      a. With ASV seqs: ASV headers include the *entire* ASV sequence ~250bps.
+      a. With ASV seqs: ASV headers include the *entire* ASV sequence ~142bps.
       b. with ASV names: This includes re-written and shortened headers like ASV_1, ASV_2, etc, which will match the names in our fasta file below.  
 2. `ASV_fastas`: A fasta file that we can use to build a tree for phylogenetic analyses (e.g. phylogenetic alpha diversity metrics or UNIFRAC dissimilarty).  
 

@@ -51,11 +51,12 @@ pacman::p_load(tidyverse, phyloseq, ggtree, phytools,
 ## Load Data files
 ```{r load-data}
 # Preprocessed phyloseq object
-load("data/02_PreProcessing/raw_preprocessed_physeq.RData")
+load("combined_data/data/02_PreProcessing/raw_preprocessed_physeq.RData")
 raw_preprocessed_physeq
 
 # Load in the tree!
-unrooted_tree <- read.tree("data/03_Phylogenetic_Tree/ASVs_unrooted.tree")
+unrooted_tree <- 
+  read.tree("combined_data/data/03_Phylogenetic_Tree/ASVs_unrooted.tree")
 unrooted_tree
 str(unrooted_tree)
 ```
@@ -84,21 +85,41 @@ kingdom_node_tree <-
   # Move legened to the bottom
   theme(legend.position = "bottom") +
   # Add node labels
-  geom_text(aes(label = node), hjust = 0.5, vjust = -2, size = 1)
+  geom_text(aes(label = node), hjust = 0.5, vjust = -2, size = 3)
 kingdom_node_tree
 ```
 
 ```{r evaluate-long-branch}
-# Zoom in on tree: node 1577
+# Zoom in on tree: node 3416
 viewClade(kingdom_node_tree +
-          labs(title = "Unrooted Tree: Node 1609"),
-          node = 1575)
-# Zoom in on tree: node 94
-viewClade(kingdom_node_tree +
-          labs(title = "Unrooted Tree: Node 94") +
-            geom_text(aes(label = ASV)),
-          node = 94)
+          labs(title = "Unrooted Tree: Node 3416")+
+          geom_text(aes(label = ASV)),
+          node = 3416)
 
+
+```
+
+# Prune ASV_3720
+```{r prune-ASV-3720}
+# Function from Joey McMurdie: https://github.com/joey711/phyloseq/issues/652
+pop_taxa = function(physeq, badTaxa){
+  allTaxa <-  taxa_names(physeq)
+  allTaxa <- allTaxa[!(allTaxa %in% badTaxa)]
+  return(prune_taxa(allTaxa, physeq))
+  }
+
+# Let's use the pop taxa function :)
+# Recreate a phyloseq object without ASV_456
+unrooted_physeq_rm3720 <-
+  unrooted_physeq %>%
+  pop_taxa(., "ASV_3720")
+
+# Intuition Check
+ntaxa(unrooted_physeq) - ntaxa(unrooted_physeq_rm3720)
+
+# Visually inspect
+ggtree(unrooted_physeq_rm3720) +
+  geom_tippoint(mapping = aes(color = Kingdom))
 ```
 
 
@@ -106,7 +127,7 @@ viewClade(kingdom_node_tree +
 
 ```{r midroot-tree}
 # Is the tree rooted? 
-new_unrooted_tree <- phy_tree(unrooted_physeq)
+new_unrooted_tree <- phy_tree(unrooted_physeq_rm3720)
 is.rooted(new_unrooted_tree)
 
 # Let's midpoint root the tree
@@ -119,17 +140,19 @@ is.rooted(midpoint_rooted_tree)
 # Assign to a new phyloseq object: merging subsetted phyloseq with the new rooted tree
 
 # 1. Create the phyloseq object
-physeq <-
-  raw_preprocessed_physeq
+physeq_rm3720 <-
+  raw_preprocessed_physeq %>%
+  subset_taxa(ASV != "ASV_3720")
 
 # Merge tree with the new physeq_rm456
 midroot_physeq <-
-  merge_phyloseq(physeq, midpoint_rooted_tree)
+  merge_phyloseq(physeq_rm3720, midpoint_rooted_tree)
 midroot_physeq
 
 # Quick Inspection of tree
 ggtree(midroot_physeq) + 
-  geom_tippoint(mapping = aes(color = Kingdom))
+  geom_tippoint(mapping = aes(color = Kingdom))+
+  scale_color_manual(values = c("goldenrod1", "cornflowerblue", "gray"))
 ```
 
 # Save to a new phyloseq object
@@ -137,7 +160,7 @@ ggtree(midroot_physeq) +
 ```{r save-physeq}
 # Save both phyloseq objects with our tree object to one .RData file
 save(list = c("unrooted_physeq", "midroot_physeq"),
-     file = "data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
+     file = "combined_data/data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
 ```
 
 

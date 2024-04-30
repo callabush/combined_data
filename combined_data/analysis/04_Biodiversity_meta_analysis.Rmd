@@ -91,15 +91,15 @@ dim(iNEXT_input_df)
 # Note that: Species in ROWS, Samples in COLUMNS 
 # Remember to set the seed! 
 #iNEXT_data <- iNEXT(iNEXT_input_df, 
-                #   q = c(0,1,2), datatype = "abundance")
+ #                  q = c(0,1,2), datatype = "abundance")
 
 # Save the file
-save(iNEXT_data, file = "data/04_Biodiversity/iNEXT_data.RData")
+#save(iNEXT_data, file = "combined_data/data/04_Biodiversity/iNEXT_data.RData")
 ```
 
 # Evaluate the Diversity! 
 ```{r load-div}
-load("data/04_Biodiversity/iNEXT_data.RData")
+load("combined_data/data/04_Biodiversity/iNEXT_data.RData")
 str(iNEXT_data)
 typeof(iNEXT_data)
 ```
@@ -113,8 +113,9 @@ color_df <-
   data.frame()
 # Check
 head(color_df)
-# Rename the column 
-colnames(color_df)[1] <- "names"
+# Rename the columns
+colnames(color_df)[1] <- "Run"
+
 # Check
 head(color_df)
 
@@ -123,14 +124,14 @@ head(color_df)
 iNEXT_color_df <- 
   color_df %>%
   # Fix the names for merging
-  mutate(names = gsub(names, pattern = "[.]", replace = "-"),
-         names = gsub(names, pattern = "X",  replace = "")) %>%
+  mutate(Run = gsub(Run, pattern = "[.]", replace = "-"),
+        Run = gsub(Run, pattern = "X",  replace = ""))
   # Merge with metadata
-  left_join(metadata_df, by = "names") %>%
+  left_join(metadata_df, by = "Run") %>%
    #Merge with colors for plotting with ggiNEXT
-  left_join(y=data.frame(gutsection_colors = gutsection_colors,
-            gut_section = names(gutsection_colors)),
-            by = "gut_section")
+  left_join(data.frame(host_colors = host_colors,
+            host = names(host_colors)),
+            by = "Host")
 ```
 
 # Plot Rarefaction with `ggiNEXT`

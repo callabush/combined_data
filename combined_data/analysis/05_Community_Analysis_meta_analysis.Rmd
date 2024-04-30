@@ -49,16 +49,19 @@ pacman::p_load(tidyverse, devtools, phyloseq, patchwork, vegan,
 
 ## Load in colors
 ```{r load-colors}
-gut_section_colors <- c(
-  "IV" = "dodgerblue4",
-  "V" = "#D9CC3C")
+host_colors <- c(
+  "Pomacanthus sexstriatus" = "navy",
+  "Kyphosus sydneyanus" = "darkslategray2",
+  "Kyphosus cinerascens" = "deeppink1",
+  "Kyphosus vaigiensis" = "plum2",
+  "Pomacanthus annularis" = "gold")
 ```
 
 
 ## Load in data 
 ```{r load-physeq}
 # Load in rooted phylogenetic tree!
-load("data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
+load("combined_data/data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
 unrooted_physeq
 midroot_physeq
 ```
@@ -80,6 +83,7 @@ colnames(raw_total_seqs_df)[1] <- "TotalSeqs"
 
 head(raw_total_seqs_df)
 
+
 # Make a histogram of raw reads
 raw_seqs_histogram <-
   raw_total_seqs_df %>%
@@ -92,6 +96,34 @@ raw_seqs_histogram <-
 ```
 
 ## Remove lowly sequenced sample
+```{r low-seq-sample}
+raw_rooted_physeq <-
+  midroot_physeq %>%
+  # Remove lowly sequence sample that was outlier in alpha diversity analysis
+  subset_samples(Run != "G196_III") %>%
+  subset_samples(Run != "G197_III") %>%
+  subset_samples(Run != "G197_IV") %>%
+  subset_samples(Run != "G200_III") %>%
+  subset_samples(Run != "G201_III") %>%
+  subset_samples(Run != "SRR17060829") %>%
+  subset_samples(Run != "SRR17060839") %>%
+  subset_samples(Run != "SRR17060845") %>%
+  subset_samples(Run != "G196_IV") %>%
+  subset_samples(Run != "G199_III") %>%
+  # Any ASVs unique to the sample will also be removed 
+  prune_taxa(taxa_sums(.) > 0, .)
+
+# Inspect
+raw_rooted_physeq
+
+# What is the minimum number of sequences
+raw_rooted_physeq %>%
+  sample_sums() %>%
+  min()
+
+
+```
+
 
 ## Normalize Read Counts
 ```{r scale-reads}
@@ -131,17 +163,17 @@ scale_reads <- function(physeq, n = min(sample_sums(physeq)), round = "round") {
 ```
 
 Rescale all reads so they all represent the count of the lowest number of sequence reads.
-We will expect each sample to have # of reads around 2200
+We will expect each sample to have # of reads around 270
 
 This is where one might decide to use rarefaction to normalize the data. 
 
 ## Scale reads and check the distribution of the seq depth
 ```{r scale-physeq}
-min(sample_sums(midroot_physeq))
+min(sample_sums(raw_rooted_physeq))
 
 # Scale reads by the above function
 scaled_rooted_physeq <-
-  midroot_physeq %>%
+  raw_rooted_physeq %>%
   scale_reads(round = "matround")
 
 # Calculate read depth
@@ -172,8 +204,8 @@ max_seqs - min_seqs
 scaled_total_seqs_df %>%
   ggplot(aes(x = TotalSeqs)) +
   geom_histogram(bins = 50) +
-  scale_x_continuous(limits = c(0, 10000)) +
-  labs(title = "Scaled Sequencing Depth at 7131") + 
+  scale_x_continuous(limits = c(0, 300)) +
+  labs(title = "Scaled Sequencing Depth at 270") + 
   theme_bw()
 
 head(scaled_total_seqs_df)
@@ -199,12 +231,12 @@ scaled_soren_pcoa <-
 soren_gut_section_pcoa <- plot_ordination(
   physeq = scaled_rooted_physeq,
   ordination = scaled_soren_pcoa,
-  color = "gut_section",
-  shape = "gut_section",
+  color = "Host",
+  shape = "Host",
   title = "Sorensen PCoA") +
-  geom_point(size=5, alpha = 0.5, aes(color = gut_section)) +
-  scale_shape_manual(values = c(15,16)) +
-  scale_color_manual(values = gut_section_colors) + 
+  geom_point(size=5, alpha = 0.5, aes(color = Host)) +
+  scale_shape_manual(values = c(15,16,17,18,19)) +
+  scale_color_manual(values = host_colors) + 
   theme_bw()
 # Show the plot 
 soren_gut_section_pcoa
@@ -214,10 +246,10 @@ Here, we are evaluating the shared taxa by presence/absence (abundance-unweighte
 
 Note that:  
 
-- Axis 1 = ~31% of variation  
-- Axis 2 = ~14% of variation 
+- Axis 1 = ~13% of variation  
+- Axis 2 = ~12% of variation 
 
-This means we explain 45% of the variation in the data in these two axes. 
+This means we explain 25% of the variation in the data in these two axes. 
 
 
 
@@ -235,12 +267,12 @@ bray_gut_section_pcoa <-
   plot_ordination(
     physeq = scaled_rooted_physeq,
     ordination = scaled_BC_pcoa,
-    color = "gut_section",
-    shape = "gut_section",
+    color = "Host",
+    shape = "Host",
     title = "Bray-Curtis PCoA") +
-  geom_point(size=5, alpha = 0.5, aes(color = gut_section)) +
-  scale_shape_manual(values = c(15,16)) +
-  scale_color_manual(values = c(gut_section_colors)) + 
+  geom_point(size=5, alpha = 0.5, aes(color = Host)) +
+  scale_shape_manual(values = c(15,16,17,18,19)) +
+  scale_color_manual(values = c(host_colors)) + 
   theme_bw()
 bray_gut_section_pcoa
 ```
@@ -249,8 +281,8 @@ Here, we are evaluating the shared taxa and then weighting them by their abundan
 
 Note that:  
 
-- Axis 1 = ~30% of variation  
-- Axis 2 = ~14% of variation 
+- Axis 1 = ~12% of variation  
+- Axis 2 = ~12% of variation 
 
 This means we explain 44% of the variation in the data in these two axes, which is almost exactly the same as the previous plot with the Sorensen Dissimilarity. 
 Abundance does NOT seem to have an influence!!
@@ -269,12 +301,12 @@ wUNI_gut_section_pcoa <-
   plot_ordination(
     physeq = scaled_rooted_physeq,
     ordination = scaled_wUNI_pcoa,
-    color = "gut_section",
-    shape = "gut_section",
+    color = "Host",
+    shape = "Host",
     title = "Weighted Unifrac PCoA") +
-  geom_point(size=5, alpha = 0.5, aes(color = gut_section)) +
+  geom_point(size=5, alpha = 0.5, aes(color = Host)) +
   scale_shape_manual(values = c(15,16,17,18, 19, 20)) +
-  scale_color_manual(values = c(gut_section_colors)) + 
+  scale_color_manual(values = c(host_colors)) + 
   theme_bw()
 wUNI_gut_section_pcoa
 ```
@@ -284,10 +316,10 @@ Here, we are evaluating the shared taxa and then weighting them by their abundan
 
 Note that:   
 
-- Axis 1 = ~60% of variation  
-- Axis 2 = ~22% of variation 
+- Axis 1 = ~45% of variation  
+- Axis 2 = ~15% of variation 
 
-This means we explain *82*% of the variation in the data in these two axes (!!!), which is significantly more than the previous plots with the taxonomic dissimilarity measures. (Almost double.) Here, phylogeny seems to be very important! This means that taxa that are abundant are found in different places in the phylogenetic tree. Therefore, the evoultionary distances (aka the branch lengths) and their abundances seem to have a major influence!!
+This means we explain *60*% of the variation in the data in these two axes (!!!), which is significantly more than the previous plots with the taxonomic dissimilarity measures. 
 
 ## Combine PCoAs
 
@@ -316,17 +348,17 @@ wUNI_gut_section_nmds <-
   plot_ordination(
     physeq = scaled_rooted_physeq,
     ordination = scaled_wUNI_nmds,
-    color = "gut_section",
-    shape = "gut_section",
+    color = "Host",
+    shape = "Host",
     title = "Weighted Unifrac NMDS") +
-  geom_point(size=5, alpha = 0.5, aes(color = gut_section)) +
-  scale_shape_manual(values = c(15,16)) +
-  scale_color_manual(values = c(gut_section_colors)) + 
+  geom_point(size=5, alpha = 0.5, aes(color = Host)) +
+  scale_shape_manual(values = c(15,16,17,18,19)) +
+  scale_color_manual(values = c(host_colors)) + 
   theme_bw()
 wUNI_gut_section_nmds
 ```
 
-We can see from above the plot that the stress value is ~0.02, which is very acceptable. And, It seems important to emphasize that the PCoA and the NMDS plot both look pretty similar! 
+We can see from above the plot that the stress value is ~0.121, which is close to being on the edge of acceptable.
 
 In this case, I would always prefer to report the PCoA results because they are linear and provide a lot more post-hoc analyses to follow up with. In addition, it's helpful to only have 2 axes of variation and show how much variation is explained. 
 
@@ -354,9 +386,9 @@ metadata <- data.frame(sample_data(scaled_rooted_physeq))
 # In this example we are testing the hypothesis that the five stations
 # that were collected have different centroids in the ordination space 
 # for each of the dissimilarity metrics, we are using a discrete variable 
-adonis2(scaled_sorensen_dist ~ gut_section, data = metadata)
-adonis2(scaled_bray_dist ~ gut_section, data = metadata)
-adonis2(scaled_wUnifrac_dist ~ gut_section, data = metadata)
+adonis2(scaled_sorensen_dist ~ Host, data = metadata)
+adonis2(scaled_bray_dist ~ Host, data = metadata)
+adonis2(scaled_wUnifrac_dist ~ Host, data = metadata)
 ```
 
 Note that:  
@@ -366,22 +398,8 @@ Note that:
 - Pr(>F) = the pvalue 
 
 
-Above, we see that the most variation is explained by the weighted unifrac, which explains ~55% of the variation in the data and also has the highest F-statistic.
+Above, we see that the most variation is explained by the weighted unifrac, which explains ~41% of the variation in the data and also has the highest F-statistic.
 
-
-
-```{r PERMANOVA-multiVariable}
-# We might also care about other variables
-# Here, we will add date and fraction as variables
-# multiplicative model ORDER MATTERS! 
-adonis2(scaled_sorensen_dist ~ gut_section * year, data = metadata)
-adonis2(scaled_bray_dist ~ gut_section * year, data = metadata)
-# Note that the ORDER MATTERS!
-adonis2(scaled_wUnifrac_dist ~ gut_section * year, data = metadata)
-adonis2(scaled_wUnifrac_dist ~ year * gut_section, data = metadata)
-```
-
-We can also run tests that include additive (+) or multipliciatve models, which include the interaction term between variables. 
 
 ## BetaDispR
 
@@ -389,19 +407,19 @@ The PERMANOVA is sensitive to variance/dispersion in the data. Therefore, we nee
 ```{r betadispR}
 # Homogeneity of Disperson test with beta dispr
 # Sorensen 
-beta_soren_gut_section <- betadisper(scaled_sorensen_dist, metadata$gut_section)
+beta_soren_gut_section <- betadisper(scaled_sorensen_dist, metadata$Host)
 permutest(beta_soren_gut_section)
 
 # Bray-curtis 
-beta_bray_gut_section <- betadisper(scaled_bray_dist, metadata$gut_section)
+beta_bray_gut_section <- betadisper(scaled_bray_dist, metadata$Host)
 permutest(beta_bray_gut_section)
 
 # Weighted Unifrac 
-beta_bray_gut_section <- betadisper(scaled_wUnifrac_dist, metadata$gut_section)
+beta_bray_gut_section <- betadisper(scaled_wUnifrac_dist, metadata$Host)
 permutest(beta_bray_gut_section)
 ```
 
-Above, our variance is not impacted by gut section. 
+Above, our variance is impacted by host. 
 
 # Session Information
  For Reproducibility
