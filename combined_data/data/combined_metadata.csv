@@ -1,43 +1,38 @@
 ﻿Run,BioSample,AvgSpotLen,Bases,Bytes,Collection_Date,env_local_scale,env_medium,Experiment,Host_Diet,Host,Library Name,create_date,Sample Name,replicate,Region,Location,Time,SL (mm),FL (mm),TW (g),GW (g),Sex,Sample_or_Control
-568_4,S246,,,,12/12/14,hindgut section IV,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,South Island South,15:30,236,285,654.3,52.5,M,Sample
-568_5,S346,,,,12/12/14,hindgut section V,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,Between Bird Islet and South Island,15:30,236,285,654.3,52.5,M,Sample
-581_5,S247,,,,12/14/14,hindgut section V,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,Palfrey Island North,16:45,190,235,381.1,308.6,F,Sample
-611_5,S248,,,,12/18/14,hindgut section V,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,Between South Island and Palfrey Island,09:45,210,256,493,391.5,M,Sample
-E03_5,S146,,,,10/18/03,hindgut section V,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,Bommie Bay,10:00,,,,,,Sample
-E1_4,S140,,,,3/18/11,hindgut section IV,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,North Direction Island,09:40,,,,1262,M,Sample
-E1_5,S141,,,,3/18/11,hindgut section V,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,North Direction Island,09:40,,,,1262,M,Sample
-E2_4,S142,,,,3/18/11,hindgut section IV,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,North Direction Island,10:30,,,,575,F,Sample
-E2_5,S143,,,,3/18/11,hindgut section V,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,North Direction Island,10:30,,,,575,F,Sample
-E3_4,S144,,,,3/18/11,hindgut section IV,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,Tuttle Beach,15:45,,,,308,M,Sample
-E3_5,S145,,,,3/18/11,hindgut section V,,,,Pomacanthus sexstriatus,,,,,Great Barrier Reef,Tuttle Beach,15:45,,,,308,M,Sample
-Neg1_S148,S148,,,,,,,,,,,,,,,,,,,,,,Control
-Neg2_S249,S249,,,,,,,,,,,,,,,,,,,,,,Control
-SRR19856781,SAMN29361048,151,8.20 M,4.79 Mb,2019,whole gut,,SRX15900449,,Pomacanthus annularis,LF015e.M4,2022-06-2702:15:00Z,LF015e.M4,biological replicate 2,,,,,,,,,Sample
-SRR19856782,SAMN29361047,151,4.13 M,2.47 Mb,2019,whole gut,,SRX15900448,,Pomacanthus annularis,LF014e.M4,2022-06-2702:15:00Z,LF014e.M4,biological replicate 1,,,,,,,,,Sample
-G196_III,SAMEA6061588,,,,,hindgut section III,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G196_IV,SAMEA6061589,,,,,hindgut section IV,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G196_V,SAMEA6061590,,,,,hindgut section V,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G197_III,SAMEA6061591,,,,,hindgut section III,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G197_IV,SAMEA6061592,,,,,hindgut section IV,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G197_V,SAMEA6061593,,,,,hindgut section V,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G198_III,SAMEA6061594,,,,,hindgut section III,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G198_IV,SAMEA6061595,,,,,hindgut section IV,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G198_V,SAMEA6061596,,,,,hindgut section V,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G199_III,SAMEA6061597,,,,,hindgut section III,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G199_IV,SAMEA6061598,,,,,hindgut section IV,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G199_V,SAMEA6061599,,,,,hindgut section V,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G200_III,SAMEA6061600,,,,,hindgut section III,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G200_IV,SAMEA6061601,,,,,hindgut section IV,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G200_V,SAMEA6061602,,,,,hindgut section V,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G201_III,SAMEA6061603,,,,,hindgut section III,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
-G201_IV,SAMEA6061604,,,,,hindgut section IV,,,,Kyphosus sydneyanus,,,,,,,,,,,,,Sample
+568_4,S246,,,,12/12/14,hindgut section IV,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,568_4,,Great Barrier Reef,South Island South,15:30,236,285,654.3,52.5,M,Sample
+568_5,S346,,,,12/12/14,hindgut section V,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,568_5,,Great Barrier Reef,Between Bird Islet and South Island,15:30,236,285,654.3,52.5,M,Sample
+581_5,S247,,,,12/14/14,hindgut section V,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,581_5,,Great Barrier Reef,Palfrey Island North,16:45,190,235,381.1,308.6,F,Sample
+611_5,S248,,,,12/18/14,hindgut section V,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,611_5,,Great Barrier Reef,Between South Island and Palfrey Island,09:45,210,256,493,391.5,M,Sample
+E03_5,S146,,,,10/18/03,hindgut section V,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,E03_5,,Great Barrier Reef,Bommie Bay,10:00,,,,,,Sample
+E1_4,S140,,,,3/18/11,hindgut section IV,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,E1_4,,Great Barrier Reef,North Direction Island,09:40,,,,1262,M,Sample
+E1_5,S141,,,,3/18/11,hindgut section V,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,E1_5,,Great Barrier Reef,North Direction Island,09:40,,,,1262,M,Sample
+E2_4,S142,,,,3/18/11,hindgut section IV,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,E2_4,,Great Barrier Reef,North Direction Island,10:30,,,,575,F,Sample
+E2_5,S143,,,,3/18/11,hindgut section V,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,E2_5,,Great Barrier Reef,North Direction Island,10:30,,,,575,F,Sample
+E3_4,S144,,,,3/18/11,hindgut section IV,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,E3_4,,Great Barrier Reef,Tuttle Beach,15:45,,,,308,M,Sample
+E3_5,S145,,,,3/18/11,hindgut section V,,,Faunivorous Corallivore,Pomacanthus sexstriatus,,,E3_5,,Great Barrier Reef,Tuttle Beach,15:45,,,,308,M,Sample
+Neg1_S148,S148,,,,,,,,,,,,Neg1_S148,,,,,,,,,,Control
+Neg2_S249,S249,,,,,,,,,,,,Neg2_S249,,,,,,,,,,Control
+AUF006,SAMN29361048,151,8.20 M,4.79 Mb,2019,whole gut,,SRX15900449,Faunivorous Corallivore,Pomacanthus annularis,LF015e.M4,2022-06-2702:15:00Z,AUF006,biological replicate 2,,,,,,,,,Sample
+AUF007,SAMN29361047,151,4.13 M,2.47 Mb,2019,whole gut,,SRX15900448,Faunivorous Corallivore,Pomacanthus annularis,LF014e.M4,2022-06-2702:15:00Z,AUF007,biological replicate 1,,,,,,,,,Sample
+G196_IV,SAMEA6061589,,,,,hindgut section IV,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G196_IV,,,,,,,,,,Sample
+G196_V,SAMEA6061590,,,,,hindgut section V,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G196_V,,,,,,,,,,Sample
+G197_IV,SAMEA6061592,,,,,hindgut section IV,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G197_IV,,,,,,,,,,Sample
+G197_V,SAMEA6061593,,,,,hindgut section V,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G197_V,,,,,,,,,,Sample
+G198_IV,SAMEA6061595,,,,,hindgut section IV,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G198_IV,,,,,,,,,,Sample
+G198_V,SAMEA6061596,,,,,hindgut section V,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G198_V,,,,,,,,,,Sample
+G199_IV,SAMEA6061598,,,,,hindgut section IV,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G199_IV,,,,,,,,,,Sample
+G199_V,SAMEA6061599,,,,,hindgut section V,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G199_V,,,,,,,,,,Sample
+G200_IV,SAMEA6061601,,,,,hindgut section IV,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G200_IV,,,,,,,,,,Sample
+G200_V,SAMEA6061602,,,,,hindgut section V,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G200_V,,,,,,,,,,Sample
+G201_IV,SAMEA6061604,,,,,hindgut section IV,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G201_IV,,,,,,,,,,Sample
+G201_V,,,,,,hindgut section V,,,"Herbivorus, mainly brown seaweed",Kyphosus sydneyanus,,,G201_V,,,,,,,,,,Sample
 SRR17060816,SAMN23482393,599,171.33 M,120.07 Mb,2017-12,hindgut section V,lumen content from sample G184V,SRX13249752,"Herbivorus, mainly red seaweed",Kyphosus cinerascens,G184V,2021-11-2902:10:00Z,G184V,,,,,,,,,,Sample
 SRR17060817,SAMN23482392,600,406.75 M,270.71 Mb,2017-12,hindgut section IV,lumen content from sample G184IV,SRX13249751,"Herbivorus, mainly red seaweed",Kyphosus cinerascens,G184IV,2021-11-2902:10:00Z,G184IV,,,,,,,,,,Sample
 SRR17060818,SAMN23482391,601,355.43 M,241.91 Mb,2017-12,hindgut section IV,lumen content from sample G179IV,SRX13249750,"Herbivorus, mainly red seaweed",Kyphosus cinerascens,G179IV,2021-11-2902:10:00Z,G179IV,,,,,,,,,,Sample
 SRR17060819,SAMN23482390,600,227.73 M,159.22 Mb,2017-12,hindgut section V,lumen content from sample G161V,SRX13249749,"Herbivorus, mainly red seaweed",Kyphosus cinerascens,G161V,2021-11-2902:10:00Z,G161V,,,,,,,,,,Sample
 SRR17060820,SAMN23482389,601,342.77 M,231.51 Mb,2017-12,hindgut section IV,lumen content from sample G161IV,SRX13249748,"Herbivorus, mainly red seaweed",Kyphosus cinerascens,G161IV,2021-11-2902:10:00Z,G161IV,,,,,,,,,,Sample
 SRR17060821,SAMN23482388,600,334.54 M,223.61 Mb,2017-12,hindgut section V,lumen content from sample G160V,SRX13249747,"Herbivorus, mainly red seaweed",Kyphosus cinerascens,G160V,2021-11-2902:10:00Z,G160V,,,,,,,,,,Sample
-SRR17060822,SAMN23482415,501,66.36 M,48.11 Mb,2011-03,hindgut section V,lumen content from sample M90V,SRX13249746,"Herbivorus, mainly green and brown seaweed",Kyphosus vaigiensis,M90V,2021-11-2902:09:00Z,M90V,,,,,,,,,,Sample
+SRR17060822,SAMN23482415,501,66.36 M,48.11 Mb,2011-03,hindgut section V,lumen content from sample M90V,SRX13249746,"Herbivorus, mainly brown seaweed",Kyphosus vaigiensis,M90V,2021-11-2902:09:00Z,M90V,,,,,,,,,,Sample
 SRR17060823,SAMN23482414,501,108.11 M,78.76 Mb,2011-03,hindgut section IV,lumen content from sample M90IV,SRX13249745,"Herbivorus, mainly green and brown seaweed",Kyphosus vaigiensis,M90IV,2021-11-2902:09:00Z,M90IV,,,,,,,,,,Sample
 SRR17060824,SAMN23482387,601,236.57 M,161.24 Mb,2017-12,hindgut section IV,lumen content from sample G160IV,SRX13249744,"Herbivorus, mainly red seaweed",Kyphosus cinerascens,G160IV,2021-11-2902:10:00Z,G160IV,,,,,,,,,,Sample
 SRR17060825,SAMN23482413,501,58.49 M,42.52 Mb,2011-03,hindgut section IV,lumen content from sample M241V,SRX13249743,"Herbivorus, mainly green and brown seaweed",Kyphosus vaigiensis,M241V,2021-11-2902:09:00Z,M241V,,,,,,,,,,Sample

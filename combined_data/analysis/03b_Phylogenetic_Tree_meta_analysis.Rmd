@@ -119,7 +119,8 @@ ntaxa(unrooted_physeq) - ntaxa(unrooted_physeq_rm3720)
 
 # Visually inspect
 ggtree(unrooted_physeq_rm3720) +
-  geom_tippoint(mapping = aes(color = Kingdom))
+  geom_tippoint(mapping = aes(color = Kingdom))+
+  scale_color_manual(values = c("goldenrod1", "cornflowerblue", "gray"))
 ```
 
 
@@ -153,6 +154,9 @@ midroot_physeq
 ggtree(midroot_physeq) + 
   geom_tippoint(mapping = aes(color = Kingdom))+
   scale_color_manual(values = c("goldenrod1", "cornflowerblue", "gray"))
+
+ggtree(midroot_physeq) + 
+  geom_tippoint(mapping = aes(color = Phylum))
 ```
 
 # Save to a new phyloseq object
