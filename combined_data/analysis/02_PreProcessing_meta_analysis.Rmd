@@ -296,8 +296,9 @@ raw_preprocessed_physeq <- noControlsChlorosMitos_physeq
 save(raw_preprocessed_physeq,
      file = "combined_data/data/02_PreProcessing/raw_preprocessed_physeq.RData")
 
-save(tax_df,
-     file = "combined_data/data/02_PreProcessing/tax_df.xlsx")
+write.xlsx(tax_df, file = "tax_df.xlsx",
+       append = FALSE)
+
 ```
 
 # Session Information 
