@@ -21,7 +21,7 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       fig.align = "center",
-                      fig.path = "../figures/03_Phylogenetic_Tree")
+                      fig.path = "../figures/03_Phylogenetic_Tree/")
 ```
 
 # Goals
@@ -61,6 +61,50 @@ unrooted_tree
 str(unrooted_tree)
 ```
 
+# Load colors
+```{r phylum-colors}
+# Set the phylum colors
+phylum_colors <- c(
+  "navy", 
+  "darkslategray2", 
+  "deeppink1",
+  "plum2", 
+  "gold", 
+  "red1",
+  "black", 
+  "firebrick",
+  "dodgerblue",
+  "limegreen",
+  "aquamarine",
+  "mediumpurple4",
+  "magenta4",
+  "grey", 
+  "magenta",
+  "#3E9B96",
+  "pink4",
+  "greenyellow",
+  "red4",
+  "yellow",
+  "#B5D6AA",
+  "palevioletred1",
+  "royalblue",
+  "darkorange", 
+  "olivedrab",
+  "indianred",
+  "blue1",
+  "greenyellow",
+  "orange4",
+  "green",
+  "darkorchid1",
+  "orange",
+  "blue4",
+  "sienna",
+  "seagreen",
+  "yellow4")
+length(phylum_colors)
+```
+
+
 # Merge Phyloseq
 ```{r merge-physeq}
 ntaxa(raw_preprocessed_physeq)
@@ -87,6 +131,8 @@ kingdom_node_tree <-
   # Add node labels
   geom_text(aes(label = node), hjust = 0.5, vjust = -2, size = 3)
 kingdom_node_tree
+
+
 ```
 
 ```{r evaluate-long-branch}
@@ -156,7 +202,10 @@ ggtree(midroot_physeq) +
   scale_color_manual(values = c("goldenrod1", "cornflowerblue", "gray"))
 
 ggtree(midroot_physeq) + 
-  geom_tippoint(mapping = aes(color = Phylum))
+  geom_tippoint(mapping = aes(color = Phylum))+
+  scale_color_manual(values = phylum_colors)
+
+
 ```
 
 # Save to a new phyloseq object
