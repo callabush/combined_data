@@ -48,7 +48,7 @@ pacman::p_load(tidyverse, devtools, phyloseq, patchwork, vegan,
 ```
 
 ## Load in colors
-```{r load-colors}
+```{r load-host-colors}
 host_colors <- c(
   "Pomacanthus sexstriatus" = "navy",
   "Kyphosus sydneyanus" = "darkslategray2",
@@ -56,6 +56,8 @@ host_colors <- c(
   "Kyphosus vaigiensis" = "plum2",
   "Pomacanthus annularis" = "gold")
 ```
+
+
 
 
 ## Load in data 
