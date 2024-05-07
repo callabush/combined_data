@@ -46,7 +46,8 @@ Finally, write data file of phyloseq output.
 ## Load libraries 
 ```{r load-libraries}
 #devtools::install_github("joey711/phyloseq")
-pacman::p_load(devtools, phyloseq, tidyverse, dada2, xlsx, install = FALSE)
+pacman::p_load(devtools, phyloseq, tidyverse, dada2, writexl,
+               Biostrings, install = FALSE)
 ```
 
 
@@ -288,6 +289,37 @@ seqSums_df %>%
 
 ```
 
+# Checking for reverse compliment
+```{r checking-reverse-compliment}
+# Pull out Taxa Table
+tax_table <- tax_table(noControlsChlorosMitos_physeq) %>% as.data.frame()
+
+# Grab ASV Sequences and Names
+asv_names <- tax_table$ASV
+asv_seqs <- tax_table$ASVseq
+
+asv_rev_comp <- 
+  matrix(nrow=length(asv_seqs), ncol = length(asv_seqs)) # Create empty comparison matrix
+
+rownames(asv_rev_comp) <- asv_names
+colnames(asv_rev_comp) <- asv_names
+
+asv_dna <- DNAStringSet(asv_seqs) # Convert sequences to Biostrings
+
+asv_rev_dna <- reverseComplement(asv_dna) # Construct reverse complement
+
+for(i in 1:length(asv_seqs)){ # For each asv sequence...
+  match_vec <- asv_dna[i] == asv_rev_dna # Compare it to the reverse complement of every other sequence...
+  asv_rev_comp[,i] <- match_vec # Write that logical vector as a new column 
+}
+
+cat("For",sum(asv_rev_comp) / 2,"ASVs, the reverse complement will need to be removed") 
+# Find how many TRUEs (matches) we have, divide by 2 because each pair occurs twice
+
+
+```
+
+
 # Save Preprocessed Phyloseq Object
 ```{r save-physeq}
 
@@ -296,11 +328,10 @@ raw_preprocessed_physeq <- noControlsChlorosMitos_physeq
 save(raw_preprocessed_physeq,
      file = "combined_data/data/02_PreProcessing/raw_preprocessed_physeq.RData")
 
-write.xlsx(tax_mat, file = "tax_mat.xlsx",
-       sheetName = "tax_mat", append = FALSE)
+write.csv(tax_df, "combined_data/data/02_PreProcessing/tax_df.csv", row.names=FALSE)
 
-save(tax_mat,
-     file = "combined_data/data/02_PreProcessing/tax_max.csv")
+write_xlsx(tax_df,"combined_data/data/02_PreProcessing/tax_df.xlsx")
+
 ```
 
 # Session Information 

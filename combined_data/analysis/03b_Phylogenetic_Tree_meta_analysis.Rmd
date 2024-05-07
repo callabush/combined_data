@@ -129,10 +129,23 @@ kingdom_node_tree <-
   # Move legened to the bottom
   theme(legend.position = "bottom") +
   # Add node labels
-  geom_text(aes(label = node), hjust = 0.5, vjust = -2, size = 3)
+  geom_text(aes(label = ASV), hjust = 0.5, vjust = 4, size = 1)
 kingdom_node_tree
 
+no_asvs<-
+  unrooted_physeq %>%
+  tax_table() %>%
+  data.frame() %>%
+  dplyr::filter(is.na(Phylum)) %>%
+  pull(ASV)
+no_asvs
 
+unrooted_physeqrmNA <-
+  unrooted_physeq %>%
+  pop_taxa(., no_asvs)
+
+ggtree(unrooted_physeqrmNA) + geom_tippoint(mapping = aes(color = Phylum)) +
+  scale_color_manual(values = phylum_colors)
 ```
 
 ```{r evaluate-long-branch}
@@ -141,6 +154,11 @@ viewClade(kingdom_node_tree +
           labs(title = "Unrooted Tree: Node 3416")+
           geom_text(aes(label = ASV)),
           node = 3416)
+
+viewClade(kingdom_node_tree +
+          labs(title = "Unrooted Tree: Node 1402")+
+          geom_text(aes(label = ASV)),
+          node = 1402)
 
 
 ```
