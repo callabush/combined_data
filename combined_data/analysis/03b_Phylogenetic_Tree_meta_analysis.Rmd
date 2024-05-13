@@ -100,7 +100,9 @@ phylum_colors <- c(
   "blue4",
   "sienna",
   "seagreen",
-  "yellow4")
+  "yellow4",
+  "thistle",
+  "lightgreen")
 length(phylum_colors)
 ```
 
@@ -129,42 +131,13 @@ kingdom_node_tree <-
   # Move legened to the bottom
   theme(legend.position = "bottom") +
   # Add node labels
-  geom_text(aes(label = ASV), hjust = 0.5, vjust = 4, size = 1)
+  geom_text(aes(label = ASV), hjust = 0.5, vjust = 4, size = 3)
 kingdom_node_tree
-
-no_asvs<-
-  unrooted_physeq %>%
-  tax_table() %>%
-  data.frame() %>%
-  dplyr::filter(is.na(Phylum)) %>%
-  pull(ASV)
-no_asvs
-
-unrooted_physeqrmNA <-
-  unrooted_physeq %>%
-  pop_taxa(., no_asvs)
-
-ggtree(unrooted_physeqrmNA) + geom_tippoint(mapping = aes(color = Phylum)) +
-  scale_color_manual(values = phylum_colors)
 ```
 
-```{r evaluate-long-branch}
-# Zoom in on tree: node 3416
-viewClade(kingdom_node_tree +
-          labs(title = "Unrooted Tree: Node 3416")+
-          geom_text(aes(label = ASV)),
-          node = 3416)
 
-viewClade(kingdom_node_tree +
-          labs(title = "Unrooted Tree: Node 1402")+
-          geom_text(aes(label = ASV)),
-          node = 1402)
-
-
-```
-
-# Prune ASV_3720
-```{r prune-ASV-3720}
+# Prune ASV_3354
+```{r prune-ASV-3354}
 # Function from Joey McMurdie: https://github.com/joey711/phyloseq/issues/652
 pop_taxa = function(physeq, badTaxa){
   allTaxa <-  taxa_names(physeq)
@@ -174,15 +147,15 @@ pop_taxa = function(physeq, badTaxa){
 
 # Let's use the pop taxa function :)
 # Recreate a phyloseq object without ASV_456
-unrooted_physeq_rm3720 <-
+unrooted_physeq_rm3354 <-
   unrooted_physeq %>%
-  pop_taxa(., "ASV_3720")
+  pop_taxa(., "ASV_3354")
 
 # Intuition Check
-ntaxa(unrooted_physeq) - ntaxa(unrooted_physeq_rm3720)
+ntaxa(unrooted_physeq) - ntaxa(unrooted_physeq_rm3354)
 
 # Visually inspect
-ggtree(unrooted_physeq_rm3720) +
+ggtree(unrooted_physeq_rm3354) +
   geom_tippoint(mapping = aes(color = Kingdom))+
   scale_color_manual(values = c("goldenrod1", "cornflowerblue", "gray"))
 ```
@@ -192,26 +165,22 @@ ggtree(unrooted_physeq_rm3720) +
 
 ```{r midroot-tree}
 # Is the tree rooted? 
-new_unrooted_tree <- phy_tree(unrooted_physeq_rm3720)
-is.rooted(new_unrooted_tree)
+new_unrooted_tree <- phy_tree(unrooted_physeq_rm3354)
 
 # Let's midpoint root the tree
 midpoint_rooted_tree <-
   midpoint.root(new_unrooted_tree)
 
-# Is the new tree rooted?
-is.rooted(midpoint_rooted_tree)
-
 # Assign to a new phyloseq object: merging subsetted phyloseq with the new rooted tree
 
 # 1. Create the phyloseq object
-physeq_rm3720 <-
+physeq_rm3354 <-
   raw_preprocessed_physeq %>%
-  subset_taxa(ASV != "ASV_3720")
+  subset_taxa(ASV != "ASV_3354")
 
 # Merge tree with the new physeq_rm456
 midroot_physeq <-
-  merge_phyloseq(physeq_rm3720, midpoint_rooted_tree)
+  merge_phyloseq(physeq_rm3354, midpoint_rooted_tree)
 midroot_physeq
 
 # Quick Inspection of tree
@@ -222,8 +191,6 @@ ggtree(midroot_physeq) +
 ggtree(midroot_physeq) + 
   geom_tippoint(mapping = aes(color = Phylum))+
   scale_color_manual(values = phylum_colors)
-
-
 ```
 
 # Save to a new phyloseq object

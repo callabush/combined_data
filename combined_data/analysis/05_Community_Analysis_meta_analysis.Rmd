@@ -53,8 +53,7 @@ host_colors <- c(
   "Pomacanthus sexstriatus" = "navy",
   "Kyphosus sydneyanus" = "darkslategray2",
   "Kyphosus cinerascens" = "deeppink1",
-  "Kyphosus vaigiensis" = "plum2",
-  "Pomacanthus annularis" = "gold")
+  "Kyphosus vaigiensis" = "gold")
 ```
 
 
@@ -202,8 +201,8 @@ max_seqs - min_seqs
 scaled_total_seqs_df %>%
   ggplot(aes(x = TotalSeqs)) +
   geom_histogram(bins = 50) +
-  scale_x_continuous(limits = c(0, 300)) +
-  labs(title = "Scaled Sequencing Depth at 326") + 
+  scale_x_continuous(limits = c(0, 500)) +
+  labs(title = "Scaled Sequencing Depth at 526") + 
   theme_bw()
 
 head(scaled_total_seqs_df)
@@ -232,7 +231,7 @@ soren_host_pcoa <- plot_ordination(
   shape = "Host",
   title = "Sorensen PCoA") +
   geom_point(size=5, alpha = 0.5, aes(color = Host)) +
-  scale_shape_manual(values = c(15,16,17,18,19)) +
+  scale_shape_manual(values = c(15,16,17,18)) +
   scale_color_manual(values = host_colors) + 
   theme_bw()
 # Show the plot 
@@ -268,7 +267,7 @@ bray_host_pcoa <-
     shape = "Host",
     title = "Bray-Curtis PCoA") +
   geom_point(size=5, alpha = 0.5, aes(color = Host)) +
-  scale_shape_manual(values = c(15,16,17,18,19)) +
+  scale_shape_manual(values = c(15,16,17,18)) +
   scale_color_manual(values = c(host_colors)) + 
   theme_bw()
 bray_host_pcoa
@@ -302,7 +301,7 @@ wUNI_host_pcoa <-
     shape = "Host",
     title = "Weighted Unifrac PCoA") +
   geom_point(size=5, alpha = 0.5, aes(color = Host)) +
-  scale_shape_manual(values = c(15,16,17,18, 19, 20)) +
+  scale_shape_manual(values = c(15,16,17,18)) +
   scale_color_manual(values = c(host_colors)) + 
   theme_bw()
 wUNI_host_pcoa
@@ -313,10 +312,10 @@ Here, we are evaluating the shared taxa and then weighting them by their abundan
 
 Note that:   
 
-- Axis 1 = ~46% of variation  
-- Axis 2 = ~15% of variation 
+- Axis 1 = ~56% of variation  
+- Axis 2 = ~12% of variation 
 
-This means we explain *61*% of the variation in the data in these two axes (!!!), which is significantly more than the previous plots with the taxonomic dissimilarity measures. 
+This means we explain *68*% of the variation in the data in these two axes (!!!), which is significantly more than the previous plots with the taxonomic dissimilarity measures. 
 
 
 ## NMDS 
@@ -351,28 +350,15 @@ wUNI_gut_section_nmds <-
   plot_ordination(
     physeq = scaled_rooted_physeq,
     ordination = scaled_wUNI_nmds,
-    color = "env_local_scale",
-    shape = "env_local_scale",
-    title = "Weighted Unifrac NMDS") +
-  geom_point(size=5, alpha = 0.5, aes(color = env_local_scale)) +
-  scale_shape_manual(values = c(15,16,17)) +
-  scale_color_manual(values = c("blue3", "deeppink4", "darkorange3")) + 
-  theme_bw()
+    color = "Host",
+    shape = "env_local_scale") +
+  geom_point(size=5, alpha = 0.5, aes(color = Host)) +
+  scale_shape_manual(values = c(15,16,17,18,19,20)) +
+  scale_color_manual(values = c("blue3", "deeppink4", "goldenrod", "magenta")) + 
+  theme_bw() 
 wUNI_gut_section_nmds
 
-# Plot the PCoA on diet
-wUNI_diet_nmds <- 
-  plot_ordination(
-    physeq = scaled_rooted_physeq,
-    ordination = scaled_wUNI_nmds,
-    color = "Host_Diet",
-    shape = "Host_Diet",
-    title = "Weighted Unifrac NMDS") +
-  geom_point(size=5, alpha = 0.5, aes(color = Host_Diet)) +
-  scale_shape_manual(values = c(15,16,17, 18)) +
-  scale_color_manual(values = c("blue3", "deeppink4", "darkorange3", "aquamarine4")) + 
-  theme_bw()
-wUNI_diet_nmds
+
 ```
 
 We can see from above the plot that the stress value is ~0.115, which is close to being on the edge of acceptable.

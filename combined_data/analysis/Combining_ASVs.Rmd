@@ -26,7 +26,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 # Goals for this document
 
-1. Combine ASV sequence tables from Soh data, Alessandro data, Bikrim data, and Angert data
+1. Combine ASV sequence tables from Alessandro data, Bikrim data, and Angert data
 
 2. Assign taxonomy 
 
@@ -57,27 +57,18 @@ load("combined_data/data/angert_meta_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_angert <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim 94 bp of right of sequence
+#Trim 28 bp of right of sequence
 colnames(noChimeras_ASV_table_angert) <- 
-  substr(colnames(noChimeras_ASV_table_angert), 1, 142)
-
-# Load Soh ASV table
-load("combined_data/data/Soh_analysis/noChimeras_ASV_table.RData")
-noChimeras_ASV_table_soh <- noChimeras_ASV_table
-rm(noChimeras_ASV_table)
-
-#Trim 8 bp of left of sequence
-colnames(noChimeras_ASV_table_soh) <- 
-  substr(colnames(noChimeras_ASV_table_soh), 8, 151)
+  substr(colnames(noChimeras_ASV_table_angert), 0, 208)
 
 # Load Bikrim ASV table
 load("combined_data/data/Bikrim_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_bikrim <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim 146 bp of left of sequence
+#Trim 147 bp of left of sequence
 colnames(noChimeras_ASV_table_bikrim) <- 
-  substr(colnames(noChimeras_ASV_table_bikrim), 146, 289)
+  substr(colnames(noChimeras_ASV_table_bikrim), 147, 355)
 
 # Load Alessandro ASV tables
 ## Load 2011 Illumina run
@@ -85,18 +76,18 @@ load("combined_data/data/Alessandro_2011/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_alessandro_2011 <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim 163 bp of left of sequence
+#Trim 163 bp of left of sequence and 16 bp from the right
 colnames(noChimeras_ASV_table_alessandro_2011) <- 
-  substr(colnames(noChimeras_ASV_table_alessandro_2011), 163, 305)
+  substr(colnames(noChimeras_ASV_table_alessandro_2011), 163, 371)
 
 ## Load 2017 Illumina run 
 load("combined_data/data/Alessandro_2017/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_alessandro_2017 <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim  bp of left of sequence
+#Trim 185 bp of left of sequence and 34 characters from the right
 colnames(noChimeras_ASV_table_alessandro_2017) <- 
-  substr(colnames(noChimeras_ASV_table_alessandro_2017), 185, 327)
+  substr(colnames(noChimeras_ASV_table_alessandro_2017), 185, 393)
 
 ```
 
@@ -105,10 +96,9 @@ colnames(noChimeras_ASV_table_alessandro_2017) <-
 noChimeras_ASV_table <-  
   mergeSequenceTables(
   table1 = noChimeras_ASV_table_angert, 
-  table2 = noChimeras_ASV_table_soh, 
-  table3 = noChimeras_ASV_table_bikrim, 
-  table4 = noChimeras_ASV_table_alessandro_2011,
-  table5 = noChimeras_ASV_table_alessandro_2017)
+  table2 = noChimeras_ASV_table_bikrim, 
+  table3 = noChimeras_ASV_table_alessandro_2011,
+  table4 = noChimeras_ASV_table_alessandro_2017)
 ```
 
 # Merge ASVs that are the same but different lengths
@@ -122,17 +112,17 @@ Here we will use the Silva nr99 v138 database
 ```{r assign-taxonomy}
 taxa_train <- 
   assignTaxonomy(collapse_noChimeras_ASV_table, 
-                 "/workdir/in_class_data/taxonomy/silva_nr99_v138.1_train_set.fa.gz", 
+                 "/Users/cab565/Documents/December_2023/taxonomy/silva_nr99_v138.1_train_set.fa.gz", 
                  multithread=6)
 
 taxa_addSpecies <- 
   addSpecies(taxa_train, 
-             "/workdir/in_class_data/taxonomy/silva_species_assignment_v138.1.fa.gz")
+             "/Users/cab565/Documents/December_2023/taxonomy/silva_species_assignment_v138.1.fa.gz")
 
 # Inspect the taxonomy 
 taxa_print <- taxa_addSpecies # Removing sequence rownames for display only
 rownames(taxa_print) <- NULL
-# View(taxa_print)
+#View(taxa_print)
 ```
 
 # Prepare the data for export

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Calla Bush St George" />
 
-<meta name="date" content="2024-05-03" />
+<meta name="date" content="2024-05-13" />
 
 <title>Combining ASV tables</title>
 
@@ -1400,7 +1400,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -1680,7 +1680,7 @@ font-size: 0.95em;
 
 <h1 class="title toc-ignore">Combining ASV tables</h1>
 <h4 class="author">Calla Bush St George</h4>
-<h4 class="date">2024-05-03</h4>
+<h4 class="date">2024-05-13</h4>
 
 </div>
 
@@ -1688,8 +1688,8 @@ font-size: 0.95em;
 <div id="goals-for-this-document" class="section level1">
 <h1>Goals for this document</h1>
 <ol style="list-style-type: decimal">
-<li><p>Combine ASV sequence tables from Soh data, Alessandro data,
-Bikrim data, and Angert data</p></li>
+<li><p>Combine ASV sequence tables from Alessandro data, Bikrim data,
+and Angert data</p></li>
 <li><p>Assign taxonomy</p></li>
 <li><p>Create ASV count table</p></li>
 <li><p>Save files for preprocessing</p></li>
@@ -1716,56 +1716,46 @@ Bikrim data, and Angert data</p></li>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>noChimeras_ASV_table_angert <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="fu">rm</span>(noChimeras_ASV_table)</span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#Trim 94 bp of right of sequence</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#Trim 28 bp of right of sequence</span></span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_angert) <span class="ot">&lt;-</span> </span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_angert), <span class="dv">1</span>, <span class="dv">142</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_angert), <span class="dv">0</span>, <span class="dv">208</span>)</span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># Load Soh ASV table</span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;combined_data/data/Soh_analysis/noChimeras_ASV_table.RData&quot;</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>noChimeras_ASV_table_soh <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co"># Load Bikrim ASV table</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;combined_data/data/Bikrim_analysis/noChimeras_ASV_table.RData&quot;</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a>noChimeras_ASV_table_bikrim <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="fu">rm</span>(noChimeras_ASV_table)</span>
 <span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#Trim 8 bp of left of sequence</span></span>
-<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_soh) <span class="ot">&lt;-</span> </span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_soh), <span class="dv">8</span>, <span class="dv">151</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#Trim 147 bp of left of sequence</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_bikrim) <span class="ot">&lt;-</span> </span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_bikrim), <span class="dv">147</span>, <span class="dv">355</span>)</span>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co"># Load Bikrim ASV table</span></span>
-<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;combined_data/data/Bikrim_analysis/noChimeras_ASV_table.RData&quot;</span>)</span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a>noChimeras_ASV_table_bikrim <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
-<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="fu">rm</span>(noChimeras_ASV_table)</span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#Trim 146 bp of left of sequence</span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_bikrim) <span class="ot">&lt;-</span> </span>
-<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_bikrim), <span class="dv">146</span>, <span class="dv">289</span>)</span>
-<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co"># Load Alessandro ASV tables</span></span>
-<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="do">## Load 2011 Illumina run</span></span>
-<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;combined_data/data/Alessandro_2011/noChimeras_ASV_table.RData&quot;</span>)</span>
-<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>noChimeras_ASV_table_alessandro_2011 <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co"># Load Alessandro ASV tables</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="do">## Load 2011 Illumina run</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;combined_data/data/Alessandro_2011/noChimeras_ASV_table.RData&quot;</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a>noChimeras_ASV_table_alessandro_2011 <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="fu">rm</span>(noChimeras_ASV_table)</span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#Trim 163 bp of left of sequence and 16 bp from the right</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2011) <span class="ot">&lt;-</span> </span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2011), <span class="dv">163</span>, <span class="dv">371</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="do">## Load 2017 Illumina run </span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;combined_data/data/Alessandro_2017/noChimeras_ASV_table.RData&quot;</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a>noChimeras_ASV_table_alessandro_2017 <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
 <span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="fu">rm</span>(noChimeras_ASV_table)</span>
 <span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#Trim 163 bp of left of sequence</span></span>
-<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2011) <span class="ot">&lt;-</span> </span>
-<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2011), <span class="dv">163</span>, <span class="dv">305</span>)</span>
-<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a></span>
-<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="do">## Load 2017 Illumina run </span></span>
-<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;combined_data/data/Alessandro_2017/noChimeras_ASV_table.RData&quot;</span>)</span>
-<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a>noChimeras_ASV_table_alessandro_2017 <span class="ot">&lt;-</span> noChimeras_ASV_table</span>
-<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="fu">rm</span>(noChimeras_ASV_table)</span>
-<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#Trim  bp of left of sequence</span></span>
-<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2017) <span class="ot">&lt;-</span> </span>
-<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2017), <span class="dv">185</span>, <span class="dv">327</span>)</span></code></pre></div>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#Trim 185 bp of left of sequence and 34 characters from the right</span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2017) <span class="ot">&lt;-</span> </span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a>  <span class="fu">substr</span>(<span class="fu">colnames</span>(noChimeras_ASV_table_alessandro_2017), <span class="dv">185</span>, <span class="dv">393</span>)</span></code></pre></div>
 </div>
 <div id="combine-asv-seq-tables-from-different-runs" class="section level1">
 <h1>Combine ASV seq tables from different runs</h1>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>noChimeras_ASV_table <span class="ot">&lt;-</span>  </span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="fu">mergeSequenceTables</span>(</span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">table1 =</span> noChimeras_ASV_table_angert, </span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">table2 =</span> noChimeras_ASV_table_soh, </span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">table3 =</span> noChimeras_ASV_table_bikrim, </span>
-<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">table4 =</span> noChimeras_ASV_table_alessandro_2011,</span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>  <span class="at">table5 =</span> noChimeras_ASV_table_alessandro_2017)</span></code></pre></div>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">table2 =</span> noChimeras_ASV_table_bikrim, </span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">table3 =</span> noChimeras_ASV_table_alessandro_2011,</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>  <span class="at">table4 =</span> noChimeras_ASV_table_alessandro_2017)</span></code></pre></div>
 <pre><code>## Warning in FUN(X[[i]], ...): Duplicated column (sequences) names.
 
 ## Warning in FUN(X[[i]], ...): Duplicated column (sequences) names.
@@ -1784,17 +1774,17 @@ Bikrim data, and Angert data</p></li>
 <p>Here we will use the Silva nr99 v138 database</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>taxa_train <span class="ot">&lt;-</span> </span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="fu">assignTaxonomy</span>(collapse_noChimeras_ASV_table, </span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>                 <span class="st">&quot;/workdir/in_class_data/taxonomy/silva_nr99_v138.1_train_set.fa.gz&quot;</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>                 <span class="st">&quot;/Users/cab565/Documents/December_2023/taxonomy/silva_nr99_v138.1_train_set.fa.gz&quot;</span>, </span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>                 <span class="at">multithread=</span><span class="dv">6</span>)</span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a></span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>taxa_addSpecies <span class="ot">&lt;-</span> </span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="fu">addSpecies</span>(taxa_train, </span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>             <span class="st">&quot;/workdir/in_class_data/taxonomy/silva_species_assignment_v138.1.fa.gz&quot;</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>             <span class="st">&quot;/Users/cab565/Documents/December_2023/taxonomy/silva_species_assignment_v138.1.fa.gz&quot;</span>)</span>
 <span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co"># Inspect the taxonomy </span></span>
 <span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>taxa_print <span class="ot">&lt;-</span> taxa_addSpecies <span class="co"># Removing sequence rownames for display only</span></span>
 <span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="fu">rownames</span>(taxa_print) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co"># View(taxa_print)</span></span></code></pre></div>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#View(taxa_print)</span></span></code></pre></div>
 </div>
 <div id="prepare-the-data-for-export" class="section level1">
 <h1>Prepare the data for export</h1>
@@ -1823,11 +1813,11 @@ metrics or UNIFRAC dissimilarty).</li>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co"># First pull the ASV sequences</span></span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>asv_seqs <span class="ot">&lt;-</span> <span class="fu">colnames</span>(collapse_noChimeras_ASV_table)</span>
 <span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>asv_seqs[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div>
-<pre><code>## [1] &quot;GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTG&quot;  
-## [2] &quot;TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGT&quot;  
-## [3] &quot;TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGT&quot;  
-## [4] &quot;GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGT&quot; 
-## [5] &quot;GATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGTTTGATAAGTTAGAGGTGAAATCTCGGAGCTCAACTCCGAAACTGCCTCTAATACTGTCGAGCTAGAGATTAGTTGCTGTGGGCGGAATGTATGGT&quot;</code></pre>
+<pre><code>## [1] &quot;TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGTGTAGCGGTGAAATGCATAGATACCACGAAGAACACCGATAGCGAAGGCAGCTTACTGTACCATTAC&quot; 
+## [2] &quot;GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTGTAGCGGTGAAATGCGTAGATATTAGGAGGAATACCAGTTGCGAAGGCGGCTCTCTGGACTGTAACT&quot; 
+## [3] &quot;TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGTCTGATAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTGTCAGACTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT&quot; 
+## [4] &quot;TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT&quot; 
+## [5] &quot;GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACACCAGTGGCGAAGGCGACACTCTGGTCTGACAC&quot;</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># make headers for our ASV seq fasta file, which will be our asv names</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>asv_headers <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="fu">dim</span>(collapse_noChimeras_ASV_table)[<span class="dv">2</span>], <span class="at">mode =</span> <span class="st">&quot;character&quot;</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>asv_headers[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div>
@@ -1862,30 +1852,30 @@ metrics or UNIFRAC dissimilarty).</li>
 <span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span></span>
 <span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="at">var =</span> <span class="st">&quot;ASVseqs&quot;</span>) </span>
 <span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a><span class="fu">head</span>(new_tax_tab)</span></code></pre></div>
-<pre><code>##                                                                                                                                            ASVseqs
-## 1   GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTG
-## 2   TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGT
-## 3   TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGT
-## 4  GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGT
-## 5 GATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGTTTGATAAGTTAGAGGTGAAATCTCGGAGCTCAACTCCGAAACTGCCTCTAATACTGTCGAGCTAGAGATTAGTTGCTGTGGGCGGAATGTATGGT
-## 6 GATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGTGGTTTTATAAGTTAGTCGTTAAATATCGGGGCTCAACCTCGATCTTGCGATTGATACTGTAGAACTAGAGAGCAGTTGCGGTAGGCGGAATGAGTAGT
+<pre><code>##                                                                                                                                                                                                             ASVseqs
+## 1  TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGTGTAGCGGTGAAATGCATAGATACCACGAAGAACACCGATAGCGAAGGCAGCTTACTGTACCATTAC
+## 2  GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTGTAGCGGTGAAATGCGTAGATATTAGGAGGAATACCAGTTGCGAAGGCGGCTCTCTGGACTGTAACT
+## 3  TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGTCTGATAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTGTCAGACTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT
+## 4  TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT
+## 5 GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACACCAGTGGCGAAGGCGACACTCTGGTCTGACAC
+## 6 ATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGTTTGATAAGTTAGAGGTGAAATCTCGGAGCTCAACTCCGAAACTGCCTCTAATACTGTCGAGCTAGAGATTAGTTGCTGTGGGCGGAATGTATGGTGTAGCGGTGAAATGCTTAGAGATCATACAGAACACCGATTGCGAAGGCAGCTCACAAAGCTAAATC
 ##    Kingdom         Phylum               Class
-## 1 Bacteria     Firmicutes          Clostridia
-## 2 Bacteria   Bacteroidota         Bacteroidia
+## 1 Bacteria   Bacteroidota         Bacteroidia
+## 2 Bacteria     Firmicutes          Clostridia
 ## 3 Bacteria Proteobacteria Gammaproteobacteria
 ## 4 Bacteria Proteobacteria Gammaproteobacteria
-## 5 Bacteria   Bacteroidota         Bacteroidia
+## 5 Bacteria Proteobacteria Gammaproteobacteria
 ## 6 Bacteria   Bacteroidota         Bacteroidia
 ##                                 Order                Family          Genus
-## 1 Peptostreptococcales-Tissierellales Peptostreptococcaceae     Romboutsia
-## 2                        Cytophagales                  &lt;NA&gt;           &lt;NA&gt;
+## 1                        Cytophagales     Cyclobacteriaceae    Aureibacter
+## 2 Peptostreptococcales-Tissierellales Peptostreptococcaceae     Romboutsia
 ## 3                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
 ## 4                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
-## 5                       Bacteroidales         Rikenellaceae      Alistipes
-## 6                       Bacteroidales         Rikenellaceae      Rikenella
+## 5                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
+## 6                       Bacteroidales         Rikenellaceae      Alistipes
 ##        Species
-## 1 sedimentorum
-## 2         &lt;NA&gt;
+## 1         &lt;NA&gt;
+## 2 sedimentorum
 ## 3         &lt;NA&gt;
 ## 4         &lt;NA&gt;
 ## 5         &lt;NA&gt;
@@ -1896,30 +1886,30 @@ metrics or UNIFRAC dissimilarty).</li>
 <span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="co"># Now let&#39;s add the ASV names </span></span>
 <span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="fu">rownames</span>(new_tax_tab) <span class="ot">&lt;-</span> <span class="fu">rownames</span>(asv_tab)</span>
 <span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="fu">head</span>(new_tax_tab)</span></code></pre></div>
-<pre><code>##                                                                                                                                                ASVseqs
-## ASV_1   GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTG
-## ASV_2   TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGT
-## ASV_3   TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGT
-## ASV_4  GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGT
-## ASV_5 GATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGTTTGATAAGTTAGAGGTGAAATCTCGGAGCTCAACTCCGAAACTGCCTCTAATACTGTCGAGCTAGAGATTAGTTGCTGTGGGCGGAATGTATGGT
-## ASV_6 GATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGTGGTTTTATAAGTTAGTCGTTAAATATCGGGGCTCAACCTCGATCTTGCGATTGATACTGTAGAACTAGAGAGCAGTTGCGGTAGGCGGAATGAGTAGT
+<pre><code>##                                                                                                                                                                                                                 ASVseqs
+## ASV_1  TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGTGTAGCGGTGAAATGCATAGATACCACGAAGAACACCGATAGCGAAGGCAGCTTACTGTACCATTAC
+## ASV_2  GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTGTAGCGGTGAAATGCGTAGATATTAGGAGGAATACCAGTTGCGAAGGCGGCTCTCTGGACTGTAACT
+## ASV_3  TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGTCTGATAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTGTCAGACTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT
+## ASV_4  TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT
+## ASV_5 GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACACCAGTGGCGAAGGCGACACTCTGGTCTGACAC
+## ASV_6 ATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGTTTGATAAGTTAGAGGTGAAATCTCGGAGCTCAACTCCGAAACTGCCTCTAATACTGTCGAGCTAGAGATTAGTTGCTGTGGGCGGAATGTATGGTGTAGCGGTGAAATGCTTAGAGATCATACAGAACACCGATTGCGAAGGCAGCTCACAAAGCTAAATC
 ##        Kingdom         Phylum               Class
-## ASV_1 Bacteria     Firmicutes          Clostridia
-## ASV_2 Bacteria   Bacteroidota         Bacteroidia
+## ASV_1 Bacteria   Bacteroidota         Bacteroidia
+## ASV_2 Bacteria     Firmicutes          Clostridia
 ## ASV_3 Bacteria Proteobacteria Gammaproteobacteria
 ## ASV_4 Bacteria Proteobacteria Gammaproteobacteria
-## ASV_5 Bacteria   Bacteroidota         Bacteroidia
+## ASV_5 Bacteria Proteobacteria Gammaproteobacteria
 ## ASV_6 Bacteria   Bacteroidota         Bacteroidia
 ##                                     Order                Family          Genus
-## ASV_1 Peptostreptococcales-Tissierellales Peptostreptococcaceae     Romboutsia
-## ASV_2                        Cytophagales                  &lt;NA&gt;           &lt;NA&gt;
+## ASV_1                        Cytophagales     Cyclobacteriaceae    Aureibacter
+## ASV_2 Peptostreptococcales-Tissierellales Peptostreptococcaceae     Romboutsia
 ## ASV_3                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
 ## ASV_4                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
-## ASV_5                       Bacteroidales         Rikenellaceae      Alistipes
-## ASV_6                       Bacteroidales         Rikenellaceae      Rikenella
+## ASV_5                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
+## ASV_6                       Bacteroidales         Rikenellaceae      Alistipes
 ##            Species
-## ASV_1 sedimentorum
-## ASV_2         &lt;NA&gt;
+## ASV_1         &lt;NA&gt;
+## ASV_2 sedimentorum
 ## ASV_3         &lt;NA&gt;
 ## ASV_4         &lt;NA&gt;
 ## ASV_5         &lt;NA&gt;
@@ -1934,33 +1924,33 @@ metrics or UNIFRAC dissimilarty).</li>
 <span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a></span>
 <span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a><span class="fu">head</span>(asv_tax)</span></code></pre></div>
 <pre><code>##        Kingdom         Phylum               Class
-## ASV_1 Bacteria     Firmicutes          Clostridia
-## ASV_2 Bacteria   Bacteroidota         Bacteroidia
+## ASV_1 Bacteria   Bacteroidota         Bacteroidia
+## ASV_2 Bacteria     Firmicutes          Clostridia
 ## ASV_3 Bacteria Proteobacteria Gammaproteobacteria
 ## ASV_4 Bacteria Proteobacteria Gammaproteobacteria
-## ASV_5 Bacteria   Bacteroidota         Bacteroidia
+## ASV_5 Bacteria Proteobacteria Gammaproteobacteria
 ## ASV_6 Bacteria   Bacteroidota         Bacteroidia
 ##                                     Order                Family          Genus
-## ASV_1 Peptostreptococcales-Tissierellales Peptostreptococcaceae     Romboutsia
-## ASV_2                        Cytophagales                  &lt;NA&gt;           &lt;NA&gt;
+## ASV_1                        Cytophagales     Cyclobacteriaceae    Aureibacter
+## ASV_2 Peptostreptococcales-Tissierellales Peptostreptococcaceae     Romboutsia
 ## ASV_3                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
 ## ASV_4                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
-## ASV_5                       Bacteroidales         Rikenellaceae      Alistipes
-## ASV_6                       Bacteroidales         Rikenellaceae      Rikenella
+## ASV_5                     Pseudomonadales   Endozoicomonadaceae Endozoicomonas
+## ASV_6                       Bacteroidales         Rikenellaceae      Alistipes
 ##            Species   ASV
-## ASV_1 sedimentorum ASV_1
-## ASV_2         &lt;NA&gt; ASV_2
+## ASV_1         &lt;NA&gt; ASV_1
+## ASV_2 sedimentorum ASV_2
 ## ASV_3         &lt;NA&gt; ASV_3
 ## ASV_4         &lt;NA&gt; ASV_4
 ## ASV_5         &lt;NA&gt; ASV_5
 ## ASV_6         &lt;NA&gt; ASV_6
-##                                                                                                                                                ASVseqs
-## ASV_1   GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTG
-## ASV_2   TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGT
-## ASV_3   TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGT
-## ASV_4  GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGT
-## ASV_5 GATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGTTTGATAAGTTAGAGGTGAAATCTCGGAGCTCAACTCCGAAACTGCCTCTAATACTGTCGAGCTAGAGATTAGTTGCTGTGGGCGGAATGTATGGT
-## ASV_6 GATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGTGGTTTTATAAGTTAGTCGTTAAATATCGGGGCTCAACCTCGATCTTGCGATTGATACTGTAGAACTAGAGAGCAGTTGCGGTAGGCGGAATGAGTAGT</code></pre>
+##                                                                                                                                                                                                                 ASVseqs
+## ASV_1  TGCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGCAGGCGGTCTATTAAGTCAGTGGTGAAAGTTTGCAGCTTAACTGTAAAAGTGCCATTGATACTGGTAGACTTGAGTGTGGTGAAGGTAGGCGGAATTCGTGGTGTAGCGGTGAAATGCATAGATACCACGAAGAACACCGATAGCGAAGGCAGCTTACTGTACCATTAC
+## ASV_2  GGCTAGCGTTATCCGGAATTACTGGGCGTAAAGGGTGCGTAGGTGGTTTCTTAAGTCAGAGGTGAAAGGCTACGGCTCAACCGTAGTAAGCCTTTGAAACTGAGAAACTTGAGTGCAGGAGAGGAGAGTAGAATTCCTAGTGTAGCGGTGAAATGCGTAGATATTAGGAGGAATACCAGTTGCGAAGGCGGCTCTCTGGACTGTAACT
+## ASV_3  TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGTCTGATAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACTGCATCCAAAACTGTCAGACTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT
+## ASV_4  TGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTTTTAAGTTGGATGTGAAAGCCCCGGGCTTAACCTGGGAACGGCATCCAAAACTGAGAGGCTTGAATGCGGAAGAGGGGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACATCAGTGGCGAAGGCGACACCCTGGTCTGACAT
+## ASV_5 GTGCAAGCGTTAATCGGAATTACTGGGCGTAAAGCGTGCGTAGGCGGCCTGTTAAGTTGGATGTGAAAGCCCCGGGCTCAACCTGGGAACGACATCCAAAACTGAGAGGCTCGAGTGCGGAAGAGGAGTGTGGAATTTCCTGTGTAGCGGTGAAATGCGTAGATATAGGAAGGAACACCAGTGGCGAAGGCGACACTCTGGTCTGACAC
+## ASV_6 ATTCAAGCGTTATCCGGATTTATTGGGTTTAAAGGGTGCGTAGGCGGTTTGATAAGTTAGAGGTGAAATCTCGGAGCTCAACTCCGAAACTGCCTCTAATACTGTCGAGCTAGAGATTAGTTGCTGTGGGCGGAATGTATGGTGTAGCGGTGAAATGCTTAGAGATCATACAGAACACCGATTGCGAAGGCAGCTCACAAAGCTAAATC</code></pre>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="co"># Intuition check</span></span>
 <span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a><span class="fu">stopifnot</span>(asv_tax<span class="sc">$</span>ASV <span class="sc">==</span> <span class="fu">rownames</span>(asv_tax), <span class="fu">rownames</span>(asv_tax) <span class="sc">==</span> <span class="fu">rownames</span>(asv_tab))</span></code></pre></div>
 </div>
@@ -2032,151 +2022,147 @@ will add this to the metadata in
 <pre><code>## ─ Session info ───────────────────────────────────────────────────────────────
 ##  setting  value
 ##  version  R version 4.3.2 (2023-10-31)
-##  os       Rocky Linux 9.0 (Blue Onyx)
-##  system   x86_64, linux-gnu
+##  os       macOS Sonoma 14.4.1
+##  system   x86_64, darwin20
 ##  ui       X11
 ##  language (EN)
 ##  collate  en_US.UTF-8
 ##  ctype    en_US.UTF-8
 ##  tz       America/New_York
-##  date     2024-05-03
-##  pandoc   3.1.1 @ /usr/lib/rstudio-server/bin/quarto/bin/tools/ (via rmarkdown)
+##  date     2024-05-13
+##  pandoc   3.1.11 @ /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools/x86_64/ (via rmarkdown)
 ## 
 ## ─ Packages ───────────────────────────────────────────────────────────────────
 ##  package              * version    date (UTC) lib source
-##  abind                  1.4-5      2016-07-21 [2] CRAN (R 4.3.2)
-##  ade4                   1.7-22     2023-02-06 [1] CRAN (R 4.3.2)
-##  ape                    5.8        2024-04-11 [1] CRAN (R 4.3.2)
+##  abind                  1.4-5      2016-07-21 [2] CRAN (R 4.3.0)
+##  ade4                   1.7-22     2023-02-06 [2] CRAN (R 4.3.0)
+##  ape                    5.7-1      2023-03-13 [2] CRAN (R 4.3.0)
 ##  Biobase                2.62.0     2023-10-24 [2] Bioconductor
 ##  BiocGenerics           0.48.1     2023-11-01 [2] Bioconductor
 ##  BiocParallel           1.36.0     2023-10-24 [2] Bioconductor
-##  biomformat             1.30.0     2023-10-24 [1] Bioconductor
-##  Biostrings             2.70.1     2023-10-25 [2] Bioconductor
-##  bitops                 1.0-7      2021-04-24 [2] CRAN (R 4.3.2)
-##  bslib                  0.5.1      2023-08-11 [2] CRAN (R 4.3.2)
-##  cachem                 1.0.8      2023-05-01 [2] CRAN (R 4.3.2)
-##  callr                  3.7.3      2022-11-02 [2] CRAN (R 4.3.2)
-##  cli                    3.6.1      2023-03-23 [2] CRAN (R 4.3.2)
-##  cluster                2.1.4      2022-08-22 [2] CRAN (R 4.3.2)
+##  biomformat             1.30.0     2023-10-24 [2] Bioconductor
+##  Biostrings             2.70.2     2024-01-28 [2] Bioconductor 3.18 (R 4.3.2)
+##  bitops                 1.0-7      2021-04-24 [2] CRAN (R 4.3.0)
+##  bslib                  0.6.1      2023-11-28 [2] CRAN (R 4.3.0)
+##  cachem                 1.0.8      2023-05-01 [2] CRAN (R 4.3.0)
+##  cli                    3.6.2      2023-12-11 [2] CRAN (R 4.3.0)
+##  cluster                2.1.6      2023-12-01 [2] CRAN (R 4.3.0)
 ##  codetools              0.2-19     2023-02-01 [2] CRAN (R 4.3.2)
-##  colorspace             2.1-0      2023-01-23 [2] CRAN (R 4.3.2)
-##  crayon                 1.5.2      2022-09-29 [2] CRAN (R 4.3.2)
-##  dada2                * 1.30.0     2023-10-24 [1] Bioconductor
-##  data.table             1.14.8     2023-02-17 [2] CRAN (R 4.3.2)
+##  colorspace             2.1-0      2023-01-23 [2] CRAN (R 4.3.0)
+##  crayon                 1.5.2      2022-09-29 [2] CRAN (R 4.3.0)
+##  dada2                * 1.30.0     2023-10-24 [2] Bioconductor
+##  data.table             1.15.0     2024-01-30 [2] CRAN (R 4.3.2)
 ##  DelayedArray           0.28.0     2023-10-24 [2] Bioconductor
-##  deldir                 1.0-9      2023-05-17 [2] CRAN (R 4.3.2)
-##  devtools             * 2.4.4      2022-07-20 [2] CRAN (R 4.2.1)
-##  digest                 0.6.33     2023-07-07 [2] CRAN (R 4.3.2)
-##  dplyr                * 1.1.3      2023-09-03 [2] CRAN (R 4.3.2)
+##  deldir                 2.0-2      2023-11-23 [2] CRAN (R 4.3.0)
+##  devtools             * 2.4.5      2022-10-11 [2] CRAN (R 4.3.0)
+##  digest                 0.6.34     2024-01-11 [2] CRAN (R 4.3.0)
+##  dplyr                * 1.1.4      2023-11-17 [2] CRAN (R 4.3.0)
 ##  DT                   * 0.32       2024-02-19 [1] CRAN (R 4.3.2)
-##  ellipsis               0.3.2      2021-04-29 [2] CRAN (R 4.3.2)
-##  evaluate               0.23       2023-11-01 [2] CRAN (R 4.3.2)
-##  fansi                  1.0.5      2023-10-08 [2] CRAN (R 4.3.2)
-##  fastmap                1.1.1      2023-02-24 [2] CRAN (R 4.3.2)
-##  forcats              * 1.0.0      2023-01-29 [1] CRAN (R 4.3.2)
-##  foreach                1.5.2      2022-02-02 [2] CRAN (R 4.3.2)
-##  fs                     1.6.3      2023-07-20 [2] CRAN (R 4.3.2)
-##  generics               0.1.3      2022-07-05 [2] CRAN (R 4.3.2)
-##  GenomeInfoDb           1.38.0     2023-10-24 [2] Bioconductor
-##  GenomeInfoDbData       1.2.11     2023-11-07 [2] Bioconductor
-##  GenomicAlignments      1.38.0     2023-10-24 [2] Bioconductor
+##  ellipsis               0.3.2      2021-04-29 [2] CRAN (R 4.3.0)
+##  evaluate               0.23       2023-11-01 [2] CRAN (R 4.3.0)
+##  fansi                  1.0.6      2023-12-08 [2] CRAN (R 4.3.0)
+##  fastmap                1.1.1      2023-02-24 [2] CRAN (R 4.3.0)
+##  forcats              * 1.0.0      2023-01-29 [2] CRAN (R 4.3.0)
+##  foreach                1.5.2      2022-02-02 [2] CRAN (R 4.3.0)
+##  fs                     1.6.3      2023-07-20 [2] CRAN (R 4.3.0)
+##  generics               0.1.3      2022-07-05 [2] CRAN (R 4.3.0)
+##  GenomeInfoDb           1.38.6     2024-02-08 [2] Bioconductor 3.18 (R 4.3.2)
+##  GenomeInfoDbData       1.2.11     2023-11-13 [2] Bioconductor
+##  GenomicAlignments      1.38.2     2024-01-16 [2] Bioconductor 3.18 (R 4.3.2)
 ##  GenomicRanges          1.54.1     2023-10-29 [2] Bioconductor
-##  ggplot2              * 3.5.0      2024-02-23 [2] CRAN (R 4.3.2)
-##  glue                   1.6.2      2022-02-24 [2] CRAN (R 4.3.2)
-##  gtable                 0.3.4      2023-08-21 [2] CRAN (R 4.3.2)
-##  hms                    1.1.3      2023-03-21 [1] CRAN (R 4.3.2)
-##  htmltools              0.5.7      2023-11-03 [2] CRAN (R 4.3.2)
-##  htmlwidgets            1.6.2      2023-03-17 [2] CRAN (R 4.3.2)
-##  httpuv                 1.6.12     2023-10-23 [2] CRAN (R 4.3.2)
-##  hwriter                1.3.2.1    2022-04-08 [1] CRAN (R 4.3.2)
-##  igraph                 1.5.1      2023-08-10 [2] CRAN (R 4.3.2)
-##  interp                 1.1-6      2024-01-26 [1] CRAN (R 4.3.2)
+##  ggplot2              * 3.4.4      2023-10-12 [1] CRAN (R 4.3.0)
+##  glue                   1.7.0      2024-01-09 [1] CRAN (R 4.3.0)
+##  gtable                 0.3.4      2023-08-21 [2] CRAN (R 4.3.0)
+##  hms                    1.1.3      2023-03-21 [2] CRAN (R 4.3.0)
+##  htmltools              0.5.7      2023-11-03 [2] CRAN (R 4.3.0)
+##  htmlwidgets            1.6.4      2023-12-06 [2] CRAN (R 4.3.0)
+##  httpuv                 1.6.14     2024-01-26 [2] CRAN (R 4.3.2)
+##  hwriter                1.3.2.1    2022-04-08 [2] CRAN (R 4.3.0)
+##  igraph                 2.0.1.1    2024-01-30 [2] CRAN (R 4.3.2)
+##  interp                 1.1-6      2024-01-26 [2] CRAN (R 4.3.2)
 ##  IRanges                2.36.0     2023-10-24 [2] Bioconductor
-##  iterators              1.0.14     2022-02-05 [2] CRAN (R 4.3.2)
-##  jpeg                   0.1-10     2022-11-29 [1] CRAN (R 4.3.2)
-##  jquerylib              0.1.4      2021-04-26 [2] CRAN (R 4.3.2)
-##  jsonlite               1.8.7      2023-06-29 [2] CRAN (R 4.3.2)
-##  knitr                  1.45       2023-10-30 [2] CRAN (R 4.3.2)
-##  later                  1.3.1      2023-05-02 [2] CRAN (R 4.3.2)
-##  lattice                0.21-9     2023-10-01 [2] CRAN (R 4.3.2)
-##  latticeExtra           0.6-30     2022-07-04 [1] CRAN (R 4.3.2)
-##  lifecycle              1.0.3      2022-10-07 [2] CRAN (R 4.3.2)
-##  lubridate            * 1.9.3      2023-09-27 [1] CRAN (R 4.3.2)
-##  magrittr               2.0.3      2022-03-30 [2] CRAN (R 4.3.2)
-##  MASS                   7.3-60     2023-05-04 [2] CRAN (R 4.3.2)
-##  Matrix                 1.6-1.1    2023-09-18 [2] CRAN (R 4.3.2)
+##  iterators              1.0.14     2022-02-05 [2] CRAN (R 4.3.0)
+##  jpeg                   0.1-10     2022-11-29 [2] CRAN (R 4.3.0)
+##  jquerylib              0.1.4      2021-04-26 [2] CRAN (R 4.3.0)
+##  jsonlite               1.8.8      2023-12-04 [2] CRAN (R 4.3.0)
+##  knitr                  1.45       2023-10-30 [2] CRAN (R 4.3.0)
+##  later                  1.3.2      2023-12-06 [2] CRAN (R 4.3.0)
+##  lattice                0.22-5     2023-10-24 [2] CRAN (R 4.3.0)
+##  latticeExtra           0.6-30     2022-07-04 [2] CRAN (R 4.3.0)
+##  lifecycle              1.0.4      2023-11-07 [2] CRAN (R 4.3.0)
+##  lubridate            * 1.9.3      2023-09-27 [2] CRAN (R 4.3.0)
+##  magrittr               2.0.3      2022-03-30 [2] CRAN (R 4.3.0)
+##  MASS                   7.3-60.0.1 2024-01-13 [2] CRAN (R 4.3.0)
+##  Matrix                 1.6-5      2024-01-11 [2] CRAN (R 4.3.0)
 ##  MatrixGenerics         1.14.0     2023-10-24 [2] Bioconductor
-##  matrixStats            1.1.0      2023-11-07 [2] CRAN (R 4.3.2)
-##  memoise                2.0.1      2021-11-26 [2] CRAN (R 4.3.2)
-##  mgcv                   1.9-0      2023-07-11 [2] CRAN (R 4.3.2)
-##  mime                   0.12       2021-09-28 [2] CRAN (R 4.3.2)
-##  miniUI                 0.1.1.1    2018-05-18 [2] CRAN (R 4.3.2)
-##  multtest               2.58.0     2023-10-24 [1] Bioconductor
-##  munsell                0.5.0      2018-06-12 [2] CRAN (R 4.3.2)
-##  nlme                   3.1-163    2023-08-09 [2] CRAN (R 4.3.2)
-##  pacman                 0.5.1      2019-03-11 [1] CRAN (R 4.3.2)
-##  patchwork            * 1.2.0.9000 2024-03-12 [1] Github (thomasp85/patchwork@d943757)
-##  permute                0.9-7      2022-01-27 [1] CRAN (R 4.3.2)
-##  phyloseq             * 1.41.1     2024-03-09 [1] Github (joey711/phyloseq@c260561)
-##  pillar                 1.9.0      2023-03-22 [2] CRAN (R 4.3.2)
-##  pkgbuild               1.4.2      2023-06-26 [2] CRAN (R 4.3.2)
-##  pkgconfig              2.0.3      2019-09-22 [2] CRAN (R 4.3.2)
-##  pkgload                1.3.3      2023-09-22 [2] CRAN (R 4.3.2)
-##  plyr                   1.8.9      2023-10-02 [2] CRAN (R 4.3.2)
-##  png                    0.1-8      2022-11-29 [2] CRAN (R 4.3.2)
-##  prettyunits            1.2.0      2023-09-24 [2] CRAN (R 4.3.2)
-##  processx               3.8.2      2023-06-30 [2] CRAN (R 4.3.2)
-##  profvis                0.3.8      2023-05-02 [2] CRAN (R 4.3.2)
-##  promises               1.2.1      2023-08-10 [2] CRAN (R 4.3.2)
-##  ps                     1.7.5      2023-04-18 [2] CRAN (R 4.3.2)
-##  purrr                * 1.0.2      2023-08-10 [2] CRAN (R 4.3.2)
-##  R6                     2.5.1      2021-08-19 [2] CRAN (R 4.3.2)
-##  RColorBrewer           1.1-3      2022-04-03 [2] CRAN (R 4.3.2)
-##  Rcpp                 * 1.0.11     2023-07-06 [2] CRAN (R 4.3.2)
-##  RcppParallel           5.1.7      2023-02-27 [2] CRAN (R 4.3.2)
-##  RCurl                  1.98-1.13  2023-11-02 [2] CRAN (R 4.3.2)
-##  readr                * 2.1.5      2024-01-10 [1] CRAN (R 4.3.2)
-##  remotes                2.4.2.1    2023-07-18 [2] CRAN (R 4.3.2)
-##  reshape2               1.4.4      2020-04-09 [2] CRAN (R 4.3.2)
-##  rhdf5                  2.46.1     2023-11-29 [1] Bioconductor 3.18 (R 4.3.2)
-##  rhdf5filters           1.14.1     2023-11-06 [1] Bioconductor
-##  Rhdf5lib               1.24.2     2024-02-07 [1] Bioconductor 3.18 (R 4.3.2)
-##  rlang                  1.1.2      2023-11-04 [2] CRAN (R 4.3.2)
-##  rmarkdown              2.25       2023-09-18 [2] CRAN (R 4.3.2)
+##  matrixStats            1.2.0      2023-12-11 [2] CRAN (R 4.3.0)
+##  memoise                2.0.1      2021-11-26 [2] CRAN (R 4.3.0)
+##  mgcv                   1.9-1      2023-12-21 [2] CRAN (R 4.3.0)
+##  mime                   0.12       2021-09-28 [2] CRAN (R 4.3.0)
+##  miniUI                 0.1.1.1    2018-05-18 [2] CRAN (R 4.3.0)
+##  multtest               2.58.0     2023-10-24 [2] Bioconductor
+##  munsell                0.5.0      2018-06-12 [2] CRAN (R 4.3.0)
+##  nlme                   3.1-164    2023-11-27 [2] CRAN (R 4.3.0)
+##  pacman                 0.5.1      2019-03-11 [1] CRAN (R 4.3.0)
+##  patchwork            * 1.2.0.9000 2024-05-07 [1] Github (thomasp85/patchwork@d943757)
+##  permute                0.9-7      2022-01-27 [2] CRAN (R 4.3.0)
+##  phyloseq             * 1.46.0     2023-10-24 [2] Bioconductor
+##  pillar                 1.9.0      2023-03-22 [2] CRAN (R 4.3.0)
+##  pkgbuild               1.4.3      2023-12-10 [2] CRAN (R 4.3.0)
+##  pkgconfig              2.0.3      2019-09-22 [2] CRAN (R 4.3.0)
+##  pkgload                1.3.4      2024-01-16 [2] CRAN (R 4.3.0)
+##  plyr                   1.8.9      2023-10-02 [1] CRAN (R 4.3.0)
+##  png                    0.1-8      2022-11-29 [2] CRAN (R 4.3.0)
+##  profvis                0.3.8      2023-05-02 [2] CRAN (R 4.3.0)
+##  promises               1.2.1      2023-08-10 [2] CRAN (R 4.3.0)
+##  purrr                * 1.0.2      2023-08-10 [2] CRAN (R 4.3.0)
+##  R6                     2.5.1      2021-08-19 [2] CRAN (R 4.3.0)
+##  RColorBrewer           1.1-3      2022-04-03 [2] CRAN (R 4.3.0)
+##  Rcpp                 * 1.0.12     2024-01-09 [2] CRAN (R 4.3.0)
+##  RcppParallel           5.1.7      2023-02-27 [2] CRAN (R 4.3.0)
+##  RCurl                  1.98-1.14  2024-01-09 [2] CRAN (R 4.3.0)
+##  readr                * 2.1.5      2024-01-10 [2] CRAN (R 4.3.0)
+##  remotes                2.4.2.1    2023-07-18 [2] CRAN (R 4.3.0)
+##  reshape2               1.4.4      2020-04-09 [2] CRAN (R 4.3.0)
+##  rhdf5                  2.46.1     2023-11-29 [2] Bioconductor
+##  rhdf5filters           1.14.1     2023-11-06 [2] Bioconductor
+##  Rhdf5lib               1.24.2     2024-02-07 [2] Bioconductor 3.18 (R 4.3.2)
+##  rlang                  1.1.3      2024-01-10 [2] CRAN (R 4.3.0)
+##  rmarkdown              2.25       2023-09-18 [2] CRAN (R 4.3.0)
 ##  Rsamtools              2.18.0     2023-10-24 [2] Bioconductor
-##  rstudioapi             0.15.0     2023-07-07 [2] CRAN (R 4.3.2)
+##  rstudioapi             0.15.0     2023-07-07 [2] CRAN (R 4.3.0)
 ##  S4Arrays               1.2.0      2023-10-24 [2] Bioconductor
-##  S4Vectors              0.40.1     2023-10-26 [2] Bioconductor
-##  sass                   0.4.7      2023-07-15 [2] CRAN (R 4.3.2)
-##  scales                 1.3.0      2023-11-28 [2] CRAN (R 4.3.2)
-##  sessioninfo            1.2.2      2021-12-06 [2] CRAN (R 4.3.2)
-##  shiny                  1.7.5.1    2023-10-14 [2] CRAN (R 4.3.2)
-##  ShortRead              1.60.0     2023-10-24 [1] Bioconductor
-##  SparseArray            1.2.1      2023-11-05 [2] Bioconductor
-##  stringi                1.7.12     2023-01-11 [2] CRAN (R 4.3.2)
-##  stringr              * 1.5.0      2022-12-02 [2] CRAN (R 4.3.2)
+##  S4Vectors              0.40.2     2023-11-23 [2] Bioconductor
+##  sass                   0.4.8      2023-12-06 [2] CRAN (R 4.3.0)
+##  scales                 1.3.0      2023-11-28 [2] CRAN (R 4.3.0)
+##  sessioninfo            1.2.2      2021-12-06 [2] CRAN (R 4.3.0)
+##  shiny                  1.8.0      2023-11-17 [2] CRAN (R 4.3.0)
+##  ShortRead              1.60.0     2023-10-24 [2] Bioconductor
+##  SparseArray            1.2.4      2024-02-11 [2] Bioconductor 3.18 (R 4.3.2)
+##  stringi                1.8.3      2023-12-11 [2] CRAN (R 4.3.0)
+##  stringr              * 1.5.1      2023-11-14 [2] CRAN (R 4.3.0)
 ##  SummarizedExperiment   1.32.0     2023-10-24 [2] Bioconductor
-##  survival               3.5-7      2023-08-14 [2] CRAN (R 4.3.2)
-##  tibble               * 3.2.1      2023-03-20 [2] CRAN (R 4.3.2)
-##  tidyr                * 1.3.0      2023-01-24 [2] CRAN (R 4.3.2)
-##  tidyselect             1.2.0      2022-10-10 [2] CRAN (R 4.3.2)
-##  tidyverse            * 2.0.0      2023-02-22 [1] CRAN (R 4.3.2)
-##  timechange             0.3.0      2024-01-18 [1] CRAN (R 4.3.2)
-##  tzdb                   0.4.0      2023-05-12 [1] CRAN (R 4.3.2)
-##  urlchecker             1.0.1      2021-11-30 [2] CRAN (R 4.3.2)
-##  usethis              * 2.2.2      2023-07-06 [2] CRAN (R 4.3.2)
-##  utf8                   1.2.4      2023-10-22 [2] CRAN (R 4.3.2)
-##  vctrs                  0.6.4      2023-10-12 [2] CRAN (R 4.3.2)
-##  vegan                  2.6-4      2022-10-11 [1] CRAN (R 4.3.2)
-##  withr                  2.5.2      2023-10-30 [2] CRAN (R 4.3.2)
-##  xfun                   0.41       2023-11-01 [2] CRAN (R 4.3.2)
-##  xtable                 1.8-4      2019-04-21 [2] CRAN (R 4.3.2)
+##  survival               3.5-7      2023-08-14 [2] CRAN (R 4.3.0)
+##  tibble               * 3.2.1      2023-03-20 [2] CRAN (R 4.3.0)
+##  tidyr                * 1.3.1      2024-01-24 [2] CRAN (R 4.3.2)
+##  tidyselect             1.2.0      2022-10-10 [2] CRAN (R 4.3.0)
+##  tidyverse            * 2.0.0      2023-02-22 [1] CRAN (R 4.3.0)
+##  timechange             0.3.0      2024-01-18 [2] CRAN (R 4.3.0)
+##  tzdb                   0.4.0      2023-05-12 [2] CRAN (R 4.3.0)
+##  urlchecker             1.0.1      2021-11-30 [2] CRAN (R 4.3.0)
+##  usethis              * 2.2.2      2023-07-06 [2] CRAN (R 4.3.0)
+##  utf8                   1.2.4      2023-10-22 [2] CRAN (R 4.3.0)
+##  vctrs                  0.6.5      2023-12-01 [2] CRAN (R 4.3.0)
+##  vegan                  2.6-4      2022-10-11 [1] CRAN (R 4.3.0)
+##  withr                  3.0.0      2024-01-16 [2] CRAN (R 4.3.0)
+##  xfun                   0.42       2024-02-08 [2] CRAN (R 4.3.2)
+##  xtable                 1.8-4      2019-04-21 [2] CRAN (R 4.3.0)
 ##  XVector                0.42.0     2023-10-24 [2] Bioconductor
-##  yaml                   2.3.7      2023-01-23 [2] CRAN (R 4.3.2)
+##  yaml                   2.3.8      2023-12-11 [2] CRAN (R 4.3.0)
 ##  zlibbioc               1.48.0     2023-10-24 [2] Bioconductor
 ## 
-##  [1] /home/cab565/R/x86_64-pc-linux-gnu-library/4.3
-##  [2] /programs/R-4.3.2/library
+##  [1] /Users/cab565/Library/R/x86_64/4.3/library
+##  [2] /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/library
 ## 
 ## ──────────────────────────────────────────────────────────────────────────────</code></pre>
 </div>

@@ -224,9 +224,10 @@ controlASV_physeq %>%
 
 write.csv(df, 'combined_data/data/control_taxa.csv')
 
-# Would only like to keep ASV 1089, 1596, 1760, 2802, 2989, 982 everything else is trash
+# Would only like to keep ASV 500, 618, 943, 1052, 1759 everything else is trash
 controlASVs_toREMOVE <- 
-  dplyr::setdiff(control_ASVs$ASV, c("ASV_7"))
+  dplyr::setdiff(control_ASVs$ASV, c("ASV_500", "ASV_618", "ASV_943",
+                                     "ASV_1052", "ASV_1759"))
 # double check 
 length(controlASVs_toREMOVE)
 
@@ -282,7 +283,7 @@ seqSums_df %>%
              fill = Run)) + 
   geom_bar(stat = "identity") 
 
-# Density plot #Something is wrong with this
+# Another plot
 seqSums_df %>%
   ggplot(aes(TotalSeqs, fill = Host)) +
   geom_density(alpha = 0.5)
@@ -328,9 +329,6 @@ raw_preprocessed_physeq <- noControlsChlorosMitos_physeq
 save(raw_preprocessed_physeq,
      file = "combined_data/data/02_PreProcessing/raw_preprocessed_physeq.RData")
 
-write.csv(tax_df, "combined_data/data/02_PreProcessing/tax_df.csv", row.names=FALSE)
-
-write_xlsx(tax_df,"combined_data/data/02_PreProcessing/tax_df.xlsx")
 
 ```
 
