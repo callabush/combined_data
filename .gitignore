@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.fastq
+.fastq.gz
+.fq
+.fq.gz
+.DS_Store
