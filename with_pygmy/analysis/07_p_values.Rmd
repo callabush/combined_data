@@ -1,0 +1,99 @@
+---
+title: "P-values for phyla and genera of P. sexstriatus"
+author: "Calla Bush St George"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    code_folding: show
+    theme: spacelab
+    highlight: pygments
+    keep_md: no
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: yes
+      toc_depth: 3
+  keep_md: true  
+editor_options: 
+  chunk_output_type: console
+---
+
+# Goals of this file
+
+Calculate p-values of top 99% of phyla and genera of P. sexstriatus 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.path = "../figures/07_p_values")
+```
+
+# Load Libraries
+```{r load-libraries}
+# Efficient package loading with pacman 
+# Don't forget to install pacman and DT if you don't have it yet. :) 
+pacman::p_load(tidyverse, devtools, dplyr, ggpubr, 
+               install = FALSE)
+```
+
+# Setting the Environment
+
+## Set the seed
+```{r set-seed}
+set.seed(238428)
+```
+
+### List of CSVs
+```{r CSVs}
+CSVs <- c("with_pygmy/data/07_p_values/Bacillota.csv",
+          "with_pygmy/data/07_p_values/Bacteroidota.csv",
+          "with_pygmy/data/07_p_values/Cyanobacteriota.csv",
+          "with_pygmy/data/07_p_values/Desulfobacterota.csv",
+          "with_pygmy/data/07_p_values/Fibrobacterota.csv",
+          "with_pygmy/data/07_p_values/Pseudomonadota.csv",
+          "with_pygmy/data/07_p_values/Spirochaetota.csv",
+          "with_pygmy/data/07_p_values/Verrucomicrobiota.csv",
+          "with_pygmy/data/07_p_values/Akkermansia.csv",
+          "with_pygmy/data/07_p_values/Alistipes.csv", 
+          "with_pygmy/data/07_p_values/Anaerovorax.csv",
+          "with_pygmy/data/07_p_values/Christensellaceae.csv",
+          "with_pygmy/data/07_p_values/Clostrium13.csv",
+          "with_pygmy/data/07_p_values/Desulfobotulus.csv", 
+          "with_pygmy/data/07_p_values/Desulfovibrio.csv",
+          "with_pygmy/data/07_p_values/dgA.csv",
+          "with_pygmy/data/07_p_values/Endozoicomonas.csv", 
+          "with_pygmy/data/07_p_values/Epulopiscium.csv",
+          "with_pygmy/data/07_p_values/Ferrimonas.csv", 
+          "with_pygmy/data/07_p_values/Fibrobacter.csv",
+          "with_pygmy/data/07_p_values/Monoglobus.csv",
+          "with_pygmy/data/07_p_values/Odoribacter.csv",
+          "with_pygmy/data/07_p_values/Peredibacter.csv",
+          "with_pygmy/data/07_p_values/Rikenella.csv",
+          "with_pygmy/data/07_p_values/Romboutsia.csv",
+          "with_pygmy/data/07_p_values/Ruminococcus.csv",
+          "with_pygmy/data/07_p_values/Treponema.csv",
+          "with_pygmy/data/07_p_values/UCG004.csv",
+          "with_pygmy/data/07_p_values/UCG005.csv",
+          "with_pygmy/data/07_p_values/Vibrio.csv")
+```
+
+### For loop
+```{r for-loop}
+for (x in CSVs) {
+my_data <- read.csv(x)
+print(x)
+print(head(my_data))
+# Two independent groups
+#:::::::::::::::::::::::::::::::::::::::::::::::::
+p <- ggboxplot(my_data, x = "Section", y = "Reads",
+  color = "Section", palette = "npg", add = "jitter", title = x)
+plot(p + stat_compare_means(paired = FALSE))
+}
+```
+
+
+
+## Session information
+```{r session-info}
+# Ensure reproducibility
+devtools::session_info()
+```

@@ -21,13 +21,13 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,
                       fig.align = "center",
-                      fig.path = "figures/01_DADA2/") #Send any figure output to this folder
+                      fig.path = "figures/06_Combining_ASVs/") 
+#Send any figure output to this folder
 ```
 
 # Goals for this document
 
-1. Combine ASV sequence tables from Alessandro data, Bikrim data, Angert data, Soh
-
+1. Combine ASV sequence tables from Alessandro data, Bikrim data, Angert data, Soh, Huggert
 2. Assign taxonomy 
 
 3. Create ASV count table
@@ -53,22 +53,23 @@ set.seed(567890)
 # Load in ASV sequence tables
 ```{r load-ASV-seq-tabs}
 # Load in Angert ASV seq table
-load("with_pygmy/data/Angert_meta_analysis/noChimeras_ASV_table.RData")
+load("with_pygmy/data/Angert_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_angert <- noChimeras_ASV_table
+#View(noChimeras_ASV_table_angert)
 rm(noChimeras_ASV_table)
 
-#Trim 16 bp of right of sequence
+# Trim 21 bp from left of sequence and 94 bp from right of sequence
 colnames(noChimeras_ASV_table_angert) <- 
-  substr(colnames(noChimeras_ASV_table_angert), 16, 144)
+  substr(colnames(noChimeras_ASV_table_angert), 21, 142)
 
 # Load Bikrim ASV table
 load("with_pygmy/data/Bikrim_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_bikrim <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim 142 bp of left of sequence and 66 from the right
+#Trim 151 bp of left of sequence and 45 from the right
 colnames(noChimeras_ASV_table_bikrim) <- 
-  substr(colnames(noChimeras_ASV_table_bikrim), 142, 270)
+  substr(colnames(noChimeras_ASV_table_bikrim), 151, 274)
 
 # Load Alessandro ASV tables
 ## Load 2011 Illumina run
@@ -76,36 +77,43 @@ load("with_pygmy/data/Alessandro_2011/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_alessandro_2011 <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim 184 bp of left of sequence and 82 bp from the right
+#Trim 189 bp of left of sequence and 82 bp from the right
 colnames(noChimeras_ASV_table_alessandro_2011) <- 
-  substr(colnames(noChimeras_ASV_table_alessandro_2011), 184, 312)
+  substr(colnames(noChimeras_ASV_table_alessandro_2011), 189, 310)
 
 ## Load 2017 Illumina run 
 load("with_pygmy/data/Alessandro_2017/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_alessandro_2017 <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim 201 bp of left of sequence and 100 bp from the right
+#Trim 206 bp of left of sequence and 100 bp from the right
 colnames(noChimeras_ASV_table_alessandro_2017) <- 
-  substr(colnames(noChimeras_ASV_table_alessandro_2017), 201, 329)
+  substr(colnames(noChimeras_ASV_table_alessandro_2017), 206, 327)
 
 # Load Soh ASV tables
 load("with_pygmy/data/Soh_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_soh <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim 24 bp of left of sequence
+# Trim 13 bp of left of sequence and 45 from right of sequence
 colnames(noChimeras_ASV_table_soh) <- 
-  substr(colnames(noChimeras_ASV_table_soh), 24, 152)
+  substr(colnames(noChimeras_ASV_table_soh), 13, 134)
 
-#load pygmyfish ASV tables
-load("with_pygmy/data/pygmyfish/noChimeras_ASV_table.RData")
+# load pygmyfish ASV tables
+load("with_pygmy/data/Pygmy_analysis/noChimeras_ASV_table.RData")
 noChimeras_ASV_table_pygmy <- noChimeras_ASV_table
 rm(noChimeras_ASV_table)
 
-#Trim bp of left of sequence
+# Trim 0 bp of left of sequence and 93 from right of sequence
 colnames(noChimeras_ASV_table_pygmy) <- 
-  substr(colnames(noChimeras_ASV_table_pygmy), 0, 128)
+  substr(colnames(noChimeras_ASV_table_pygmy), 0, 121)
+
+sum(noChimeras_ASV_table_angert) + 
+  sum(noChimeras_ASV_table_alessandro_2011) +
+  sum(noChimeras_ASV_table_alessandro_2017) +
+  sum(noChimeras_ASV_table_bikrim) +
+  sum(noChimeras_ASV_table_pygmy) +
+  sum(noChimeras_ASV_table_soh)
 
 ```
 
@@ -113,12 +121,43 @@ colnames(noChimeras_ASV_table_pygmy) <-
 ```{r combine-ASV-seq-tabs}
 noChimeras_ASV_table <-  
   mergeSequenceTables(
+  noChimeras_ASV_table_angert, 
+  noChimeras_ASV_table_bikrim, 
+  noChimeras_ASV_table_alessandro_2011,
+  noChimeras_ASV_table_alessandro_2017,
+  noChimeras_ASV_table_soh,
+  noChimeras_ASV_table_pygmy, repeats="sum")
+
+sum(noChimeras_ASV_table)
+head(colnames(noChimeras_ASV_table_angert) %>% sort() %>% rev())
+head(colnames(noChimeras_ASV_table_pygmy)%>% sort())
+table(nchar(colnames(noChimeras_ASV_table_angert), keepNA = TRUE))
+table(nchar(colnames(noChimeras_ASV_table_pygmy), keepNA = TRUE))
+table(nchar(colnames(noChimeras_ASV_table_alessandro_2011), keepNA = TRUE))
+table(nchar(colnames(noChimeras_ASV_table_alessandro_2017), keepNA = TRUE))
+table(nchar(colnames(noChimeras_ASV_table_bikrim), keepNA = TRUE))
+table(nchar(colnames(noChimeras_ASV_table_soh), keepNA = TRUE))
+
+# write_rds()
+write_rds(noChimeras_ASV_table_angert, 
+          file = "with_pygmy/data/Angert_analysis/Angert_noChimeras_ASV_table.rds", 
+          compress = ("gz"))
+
+write_rds(noChimeras_ASV_table_pygmy, 
+          file = "with_pygmy/data/Pygmy_analysis/Pygmy_noChimeras_ASV_table.rds", 
+          compress = ("gz"))
+table(nchar(colnames(noChimeras_ASV_table_angert), keepNA = TRUE))
+table(nchar(colnames(noChimeras_ASV_table_pygmy), keepNA = TRUE))
+
+noChimeras_ASV_table <-  
+  mergeSequenceTables(
   table1 = noChimeras_ASV_table_angert, 
-  table2 = noChimeras_ASV_table_bikrim, 
-  table3 = noChimeras_ASV_table_alessandro_2011,
-  table4 = noChimeras_ASV_table_alessandro_2017,
-  table5 = noChimeras_ASV_table_soh,
-  table6 = noChimeras_ASV_table_pygmy)
+  # table2 = noChimeras_ASV_table_bikrim, 
+  # table3 = noChimeras_ASV_table_alessandro_2011,
+  # table4 = noChimeras_ASV_table_alessandro_2017,
+  # table5 = noChimeras_ASV_table_soh,
+  table2 = noChimeras_ASV_table_pygmy, repeats = "sum")
+sum(noChimeras_ASV_table)
 ```
 
 # Merge ASVs that are the same but different lengths
@@ -133,7 +172,7 @@ Here we will use the Silva nr99 v138 database
 taxa_train <- 
   assignTaxonomy(collapse_noChimeras_ASV_table, 
                  "/Users/cab565/Documents/December_2023/taxonomy/silva_nr99_v138.1_train_set.fa.gz", 
-                 multithread=6)
+                 multithread=TRUE)
 
 taxa_addSpecies <- 
   addSpecies(taxa_train, 
@@ -226,10 +265,10 @@ stopifnot(asv_tax$ASV == rownames(asv_tax), rownames(asv_tax) == rownames(asv_ta
 
 # Write `01_DADA2` files
 
-Now, we will write the files! We will write the following to the `data/01_DADA2/` folder. We will save both as files that could be submitted as supplements AND as .RData objects for easy loading into the next steps into R.:  
+Now, we will write the files! We will write the following to the `data/06_Combining_ASVs/` folder. We will save both as files that could be submitted as supplements AND as .RData objects for easy loading into the next steps into R.:  
 
-1. `ASV_counts.tsv`: ASV count table that has ASV names that are re-written and shortened headers like ASV_1, ASV_2, etc, which will match the names in our fasta file below. This will also be saved as `data/01_DADA2/ASV_counts.RData`.
-2. `ASV_counts_withSeqNames.tsv`: This is generated with the data object in this file known as `noChimeras_ASV_table`. ASV headers include the *entire* ASV sequence ~250bps.  In addition, we will save this as a .RData object as `data/01_DADA2/noChimeras_ASV_table.RData` as we will use this data in `analysis/02_PreProcessing.Rmd` to assign the taxonomy from the sequence headers.  
+1. `ASV_counts.tsv`: ASV count table that has ASV names that are re-written and shortened headers like ASV_1, ASV_2, etc, which will match the names in our fasta file below. This will also be saved as `data/06_Combining_ASVs/ASV_counts.RData`.
+2. `ASV_counts_withSeqNames.tsv`: This is generated with the data object in this file known as `noChimeras_ASV_table`. ASV headers include the *entire* ASV sequence ~250bps.  In addition, we will save this as a .RData object as `data/06_Combining_ASVs/noChimeras_ASV_table.RData` as we will use this data in `analysis/02_PreProcessing.Rmd` to assign the taxonomy from the sequence headers.  
 3. `ASVs.fasta`: A fasta file output of the ASV names from `ASV_counts.tsv` and the sequences from the ASVs in `ASV_counts_withSeqNames.tsv`. A fasta file that we can use to build a tree for phylogenetic analyses (e.g. phylogenetic alpha diversity metrics or UNIFRAC dissimilarty).  
 4. We will also make a copy of `ASVs.fasta` in `data/02_PreProcessing/` to be used for the taxonomy classification in the next step in the workflow.  
 5. Write out the taxonomy table
@@ -241,28 +280,30 @@ Now, we will write the files! We will write the following to the `data/01_DADA2/
 # Save to regular .tsv file 
 # Write BOTH the modified and unmodified ASV tables to a file!
 # Write count table with ASV numbered names (e.g. ASV_1, ASV_2, etc)
-write.table(asv_tab, "combined_data_with_pygmy/data/01_DADA2/ASV_counts.tsv", 
+write.table(asv_tab, "with_pygmy/data/06_Combining_ASVs/ASV_counts.tsv", 
             sep = "\t", quote = FALSE, col.names = NA)
 # Write count table with ASV sequence names
-write.table(noChimeras_ASV_table, "combined_data_with_pygmy/data/01_DADA2/ASV_counts_withSeqNames.tsv",
+write.table(noChimeras_ASV_table, 
+            "with_pygmy/data/06_Combining_ASVs/ASV_counts_withSeqNames.tsv",
             sep = "\t", quote = FALSE, col.names = NA)
 # Write out the fasta file for reference later on for what seq matches what ASV
 asv_fasta <- c(rbind(asv_headers, asv_seqs))
 # Save to a file!
-write(asv_fasta, "combined_data_with_pygmy/data/01_DADA2/ASVs.fasta")
+write(asv_fasta, "with_pygmy/data/06_Combining_ASVs/ASVs.fasta")
 
 
 # SECOND, let's save the taxonomy tables 
 # Write the table 
-write.table(asv_tax, "combined_data_with_pygmy/data/01_DADA2/ASV_taxonomy.tsv", sep = "\t", quote = FALSE, col.names = NA)
+write.table(asv_tax, "with_pygmy/data/06_Combining_ASVs/ASV_taxonomy.tsv",
+            sep = "\t", quote = FALSE, col.names = NA)
 
 
 # THIRD, let's save to a RData object 
 # Each of these files will be used in the analysis/02_PreProcessing
 # RData objects are for easy loading :) 
 save(collapse_noChimeras_ASV_table,
-     file = "combined_data_with_pygmy/data/01_DADA2/noChimeras_ASV_table.RData")
-save(asv_tab, file = "combined_data_with_pygmy/data/01_DADA2/ASV_counts.RData")
+     file = "with_pygmy/data/06_Combining_ASVs/noChimeras_ASV_table.RData")
+save(asv_tab, file = "with_pygmy/data/06_Combining_ASVs/ASV_counts.RData")
 # Did not track counts
 ```
 

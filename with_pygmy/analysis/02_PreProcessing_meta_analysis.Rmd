@@ -21,7 +21,8 @@ editor_options:
 ```{r setup}
 knitr::opts_chunk$set(echo = FALSE,
                       fig.align = "center",
-                      fig.path = "../figures/02_PreProcessing/") # send any figure output to this folder 
+                      fig.path = "../figures/02_PreProcessing/") 
+# send any figure output to this folder 
 ```
 
 # Goals
@@ -62,13 +63,15 @@ pacman::p_load(devtools, phyloseq, tidyverse, dada2,
 ### ASV Table
 ```{r load-asv-table}
 # First, load asv table
-load("combined_data_with_pygmy/data/01_DADA2/ASV_counts.RData")
+load("with_pygmy/data/06_Combining_ASVs/ASV_counts.RData")
 
 # Inspect asv_tab
 head(asv_tab)[,20:25]
 
+#View(asv_tab)
+
 colnames(asv_tab) <-
-  sub("_R1_filtered.fastq.gz$", "", colnames(asv_tab))
+  sub("_R1_filtered.fastq.gz", "", colnames(asv_tab))
 
 
 str(asv_tab)
@@ -77,7 +80,7 @@ head(asv_tab)[,20:25]
 
 ##  Taxonomy Table
 ```{r load-tax-table}
-tax_df <- read.table("combined_data_with_pygmy/data/01_DADA2/ASV_taxonomy.tsv",
+tax_df <- read.table("with_pygmy/data/06_Combining_ASVs/ASV_taxonomy.tsv",
                      sep = "\t", skip = 1)
 head(tax_df)
 
@@ -98,28 +101,37 @@ tax_mat <-
 ##  Metadata
 ```{r load-metadata}
 # Load in metadata
-metadata_df <- read.csv("with_pygmy/data/combined_metadata.csv")
+metadata_df <- 
+  read.csv("with_pygmy/data/combined_metadata_2.csv")
 
-dim(metadata_df)
-colnames(metadata_df)
+row.names(metadata_df)
+metadata_df$Names
+
+# Rewrite 
+row.names(metadata_df) <- metadata_df$Names
+# Check afterwards that it worked 
+row.names(metadata_df)
+# intuition check
 head(metadata_df)
-
 ```
 
 
 # Handoff to phyloseq
 ```{r phyloseq-handoff}
-
-
-
-rownames(metadata_df) <-metadata_df$Run
+#rownames(metadata_df) <-metadata_df$Names
 
 # double check it's all good 
 dim(asv_tab)
 dim(tax_mat)
 dim(metadata_df)
 
+#View(asv_tab)
+#View(tax_mat)
+
 # Intuition check 
+#stopifnot(colnames(asv_tab)) == row.names(metadata_df)
+print(colnames(asv_tab))
+print(rownames(metadata_df))
 stopifnot(row.names(asv_tab) == row.names(tax_mat))
 
 # Construct the phyloseq object 
@@ -130,7 +142,7 @@ raw_physeq
 
 # Save this raw phyloseq object 
 # Make new folder in data/ "02_Preprocessing"
-save(raw_physeq, file = "combined_data_with_pygmy/data/02_PreProcessing/raw_physeq.RData")
+save(raw_physeq, file = "with_pygmy/data/02_PreProcessing/raw_physeq.RData")
 ```
 
 # Clean up the data
@@ -141,9 +153,6 @@ Remove:
 2. mitochondria  
 
 ```{r rm-mitos-chloros}
-# Remind myself of tax table 
-
-
 # Make new physeq without chloroplasts
 noChloros_physeq <- 
   raw_physeq %>% 
@@ -154,11 +163,11 @@ noChloros_physeq <-
 num_chloro_ASVs <- ntaxa(raw_physeq) - ntaxa(noChloros_physeq)
 num_chloro_ASVs
 
-# Intuition chek 
-#noChloros_physeq %>%
-#  tax_table() %>%
-#  data.frame() %>%
-#  View()
+# # Intuition check 
+# noChloros_physeq %>%
+#   tax_table() %>%
+#   data.frame() %>%
+#   View()
 
 # remove mitochondria 
 noChlorosMitos_physeq <- 
@@ -190,16 +199,23 @@ Take a look at the negative controls and then make a decision about whether or n
 
 ## Negative Controls 
 ```{r neg-controls}
+# Look at ASV table
+ # noChloros_physeq %>%
+ #   otu_table() %>%
+ #   data.frame() %>%
+ #   View()
+
 # create a vector of samples that were negative controls 
-control_samples <- c("Neg1_S148", "Neg2_S249")
+control_samples <- c("Neg1", "Neg2")
 
 # Make a new phyloseq object of only the control samples 
 control_physeq <- 
   noChlorosMitos_physeq %>%
-  subset_samples(., Run %in% control_samples) %>%
+  subset_samples(., Names %in% control_samples) %>%
   # force remove ASVs with 0 counts 
   prune_taxa(taxa_sums(.) > 0, .)
 
+control_physeq
 
 # vector of control asvs
 control_ASVs <- 
@@ -229,13 +245,13 @@ controlASV_physeq %>%
 control_taxa <-
 controlASV_physeq %>%
  tax_table() %>%
- data.frame()
+ data.frame() 
 
-write.csv(df, 'combined_data_with_pygmy/data/control_taxa.csv')
+write.csv(control_taxa, 'with_pygmy/data/02_PreProcessing/control_taxa.csv')
 
 # Would only like to keep ASV 7, everything else is trash
 controlASVs_toREMOVE <- 
-  dplyr::setdiff(control_ASVs$ASV, c("ASV_23"))
+  dplyr::setdiff(control_ASVs$ASV, c("ASV_16"))
 # double check 
 length(controlASVs_toREMOVE)
 
@@ -245,7 +261,7 @@ noControlsChlorosMitos_physeq <-
   # Actually remove the control ASVs (except 1168, 1293, 1889, 2084, 3346, 3573)
   subset_taxa(., !(ASV %in% controlASVs_toREMOVE)) %>%
   # Remove control samples 
-  subset_samples(., !(Run %in% control_samples))
+  subset_samples(., !(Names %in% control_samples))
 
 # Inspect no controls object 
 noControlsChlorosMitos_physeq
@@ -269,8 +285,8 @@ seqSums_df <-
   # Sum each sample column 
   colSums() %>%
   data.frame() %>%
-  rownames_to_column(var = "Run") %>%
-  left_join(., metadata_df, by = "Run") 
+  rownames_to_column(var = "Names") %>%
+  left_join(., metadata_df, by = "Names") 
 
 # Rename second column 
 colnames(seqSums_df)[2] <- "TotalSeqs"
@@ -281,14 +297,14 @@ head(seqSums_df)
 
 # Show the depth of samples 
 seqSums_df %>%
-  dplyr::select(Run, TotalSeqs) %>%
+  dplyr::select(Names, TotalSeqs) %>%
   arrange(TotalSeqs) %>%
-  head()
+  View()
 
 # plot it! 
 seqSums_df %>%
-  ggplot(aes(x=reorder(Run, TotalSeqs), y = TotalSeqs,
-             fill = Run)) + 
+  ggplot(aes(x=reorder(Names, TotalSeqs), y = TotalSeqs,
+             fill = Sample.Name)) + 
   geom_bar(stat = "identity") 
 
 # Another plot
@@ -308,7 +324,8 @@ asv_names <- tax_table$ASV
 asv_seqs <- tax_table$ASVseq
 
 asv_rev_comp <- 
-  matrix(nrow=length(asv_seqs), ncol = length(asv_seqs)) # Create empty comparison matrix
+  matrix(nrow=length(asv_seqs), ncol = length(asv_seqs)) 
+# Create empty comparison matrix
 
 rownames(asv_rev_comp) <- asv_names
 colnames(asv_rev_comp) <- asv_names
@@ -317,12 +334,16 @@ asv_dna <- DNAStringSet(asv_seqs) # Convert sequences to Biostrings
 
 asv_rev_dna <- reverseComplement(asv_dna) # Construct reverse complement
 
-for(i in 1:length(asv_seqs)){ # For each asv sequence...
-  match_vec <- asv_dna[i] == asv_rev_dna # Compare it to the reverse complement of every other sequence...
-  asv_rev_comp[,i] <- match_vec # Write that logical vector as a new column 
+for(i in 1:length(asv_seqs)){ 
+  # For each asv sequence...
+  match_vec <- asv_dna[i] == asv_rev_dna 
+  # Compare it to the reverse complement of every other sequence...
+  asv_rev_comp[,i] <- match_vec 
+  # Write that logical vector as a new column 
 }
 
-cat("For",sum(asv_rev_comp) / 2,"ASVs, the reverse complement will need to be removed") 
+cat("For",sum(asv_rev_comp) / 2,
+    "ASVs, the reverse complement will need to be removed") 
 # Find how many TRUEs (matches) we have, divide by 2 because each pair occurs twice
 
 
@@ -335,7 +356,7 @@ cat("For",sum(asv_rev_comp) / 2,"ASVs, the reverse complement will need to be re
 raw_preprocessed_physeq <- noControlsChlorosMitos_physeq
 
 save(raw_preprocessed_physeq,
-     file = "combined_data_with_pygmy/data/02_PreProcessing/raw_preprocessed_physeq.RData")
+     file = "with_pygmy/data/02_PreProcessing/raw_preprocessed_physeq.RData")
 
 
 ```

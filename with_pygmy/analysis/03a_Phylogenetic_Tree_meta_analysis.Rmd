@@ -53,7 +53,7 @@ set.seed(238428)
 pacman::p_load(phytools, ggtree, RColorBrewer, install = FALSE)
 
 # Load phyloseq
-load("combined_data_with_pygmy/data/02_PreProcessing/raw_preprocessed_physeq.RData")
+load("with_pygmy/data/02_PreProcessing/raw_preprocessed_physeq.RData")
 raw_preprocessed_physeq
 ```
 
@@ -78,7 +78,7 @@ asv_seq_fasta <-
 head(asv_seq_fasta)
 # Write to file
 write(asv_seq_fasta,
-      file = "combined_data_with_pygmy/data/03_Phylogenetic_Tree/preprocessed_ASVs.fasta")
+      file = "with_pygmy/data/03_Phylogenetic_Tree/preprocessed_ASVs.fasta")
 ```
 
 # Align the 16S sequences from fasta file with MAFFT
@@ -88,7 +88,7 @@ write(asv_seq_fasta,
 
 ```{r run-mafft, engine='bash', engine.opts = '-l'}
 # Change directories to provide the fasta file we made above
-cd combined_data_with_pygmy/data/03_Phylogenetic_Tree/
+cd with_pygmy/data/03_Phylogenetic_Tree/
 pwd
 
 # Set a seed - using same seed as before for consistency
@@ -111,7 +111,7 @@ pwd
 
 ```{r run-FastTree2, engine='bash', engine.opts = '-l'}
 # cd into the alignment file folder
-cd combined_data_with_pygmy/data/03_Phylogenetic_Tree/
+cd with_pygmy/data/03_Phylogenetic_Tree/
 pwd
 
 # Run FastTree to generate phylogenetic tree

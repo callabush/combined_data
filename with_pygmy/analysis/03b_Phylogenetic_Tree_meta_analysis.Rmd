@@ -56,12 +56,12 @@ pacman::p_load(tidyverse, phyloseq, ggtree, phytools,
 ## Load Data files
 ```{r load-data}
 # Preprocessed phyloseq object
-load("combined_data_with_pygmy/data/02_PreProcessing/raw_preprocessed_physeq.RData")
+load("with_pygmy/data/02_PreProcessing/raw_preprocessed_physeq.RData")
 raw_preprocessed_physeq
 
 # Load in the tree!
 unrooted_tree <- 
-  read.tree("combined_data_with_pygmy/data/03_Phylogenetic_Tree/ASVs_unrooted.tree")
+  read.tree("with_pygmy/data/03_Phylogenetic_Tree/ASVs_unrooted.tree")
 unrooted_tree
 str(unrooted_tree)
 ```
@@ -203,7 +203,7 @@ ggtree(midroot_physeq) +
 ```{r save-physeq}
 # Save both phyloseq objects with our tree object to one .RData file
 save(list = c("unrooted_physeq", "midroot_physeq"),
-     file = "combined_data_with_pygmy/data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
+     file = "with_pygmy/data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
 ```
 
 

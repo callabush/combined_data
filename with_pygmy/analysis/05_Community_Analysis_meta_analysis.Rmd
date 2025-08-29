@@ -71,7 +71,7 @@ host_colors <- c(
 ## Load in data 
 ```{r load-physeq}
 # Load in rooted phylogenetic tree!
-load("combined_data_with_pygmy/data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
+load("with_pygmy/data/03_Phylogenetic_Tree/phytree_preprocessed_physeq.RData")
 unrooted_physeq
 midroot_physeq
 ```
@@ -86,8 +86,7 @@ raw_total_seqs_df <-
   unrooted_physeq %>%
   # Calculate the sample read sums
   sample_sums() %>%
-  data.frame()
-
+  data.frame() 
 # Name the column
 colnames(raw_total_seqs_df)[1] <- "TotalSeqs"
 
@@ -99,7 +98,7 @@ raw_seqs_histogram <-
   raw_total_seqs_df %>%
   ggplot(aes(x = TotalSeqs)) +
   geom_histogram(bins = 50) +
-  scale_x_continuous(limits = c(0, 50000)) +
+  scale_x_continuous(limits = c(0, 60000)) +
   labs(title = "Raw Sequencing Depth Distribution") + 
   theme_bw()
 
@@ -111,14 +110,14 @@ raw_seqs_histogram
 raw_rooted_physeq <-
   midroot_physeq %>%
   # Remove lowly sequence sample that was outlier in alpha diversity analysis
-   subset_samples(Run != "G196_IV") %>%
-  subset_samples(Run != "G197_IV") %>%
-  subset_samples(Run != "G199_IV") %>%
-  subset_samples(Run != "SRR17060827") %>%
-  subset_samples(Run != "SRR17060829") %>%
-  subset_samples(Run != "SRR17060839") %>%
-  subset_samples(Run != "SRR17060845") %>%
- subset_samples(Run != "SRR21492551.fastq_NA") %>%
+   subset_samples(Names != "ERR3585846") %>%
+  subset_samples(Names != "SRR17060839") %>%
+  subset_samples(Names != "SRR17060829") %>%
+  subset_samples(Names != "SRR17060845") %>%
+  subset_samples(Names != "ERR3585834") %>%
+  subset_samples(Names != "ERR3585831") %>%
+  subset_samples(Names != "SRR21492551") %>%
+ subset_samples(Names != "SRR17060827") %>%
   # Any ASVs unique to the sample will also be removed 
   prune_taxa(taxa_sums(.) > 0, .)
 
@@ -217,8 +216,18 @@ scaled_total_seqs_df %>%
   labs(title = "Scaled Sequencing Depth at 500") + 
   theme_bw()
 
-head(scaled_total_seqs_df)
+#save(scaled_rooted_physeq, file= 
+#       "/Users/cab565/Documents/combined_data/with_pygmy/data/05_Community_Analysis/scaled_rooted_physeq_df.RData")
 
+#write.csv(scaled_rooted_physeq,  file= 
+#       "/Users/cab565/Documents/combined_data/with_pygmy/data/05_Community_Analysis/scaled_rooted_physeqs_df.csv")
+
+#write.csv(scaled_rooted_physeq@otu_table,  file= 
+#       "/Users/cab565/Documents/combined_data/with_pygmy/data/05_Community_Analysis/otu_table.csv")
+
+#write.csv(scaled_rooted_physeq@tax_table,  file= 
+#       "/Users/cab565/Documents/combined_data/with_pygmy/data/05_Community_Analysis/tax_table.csv")
+#
 ```
 
 # Calculate & Visualize Community Dissimiliarity
@@ -296,13 +305,22 @@ This means we explain 22% of the variation in the data in these two axes, which 
 Abundance does seem to have an influence!!
 
 ## Weighted-Unifrac PCoA
-```{r wUnifrac-PCoA}
+```{r wUnifrac-PCoA, fig.width= 12, fig.height=8}
 # Calculate the BC distance
 scaled_wUNI_pcoa <- 
   ordinate(
     physeq = scaled_rooted_physeq,
     method = "PCoA",
     distance = "wunifrac")
+
+host_names = c("Pomacanthus sexstriatus",
+  "Pomacanthus annularis",
+  "Kyphosus sydneyanus",
+  "Kyphosus cinerascens",
+  "Kyphosus vaigiensis",
+  "Centropyge flavissima",
+  "Centropyge spp. hybrid",
+  "Centropyge eibli")
 
 # Plot the PCoA
 wUNI_host_pcoa <- 
@@ -315,7 +333,7 @@ wUNI_host_pcoa <-
   geom_point(size=5, alpha = 0.5, aes(color = Host)) +
   scale_shape_manual(values = c(18,20,10)) +
   scale_color_manual(values = c(host_colors)) + 
-  theme_bw() + labs(shape = "Gut Section") + geom_point(size = 0.25)
+  theme_bw() + labs(shape = "Gut Section") + geom_point(size = 0.25) 
 wUNI_host_pcoa
 ```
 
@@ -378,18 +396,14 @@ We can see from above the plot that the stress value is ~0.135, which is close t
 
 In this case, I would always prefer to report the PCoA results because they are linear and provide a lot more post-hoc analyses to follow up with. In addition, it's helpful to only have 2 axes of variation and show how much variation is explained. 
 
-```{r combined-wUnifrac, fig.width=10, fig.height=3.5}
-(wUNI_host_nmds + theme(legend.position = "right")) + 
-  (wUNI_gut_section_nmds + theme(legend.position = "right"))
-```
-
 
 # Statistical Significance Testing 
 
 ## PERMANOVA 
 ```{r PERMANOVA}
 # Calculate all three of the distance matrices
-scaled_wUnifrac_dist <- phyloseq::distance(scaled_rooted_physeq, method = "wunifrac")
+scaled_wUnifrac_dist <- phyloseq::distance(scaled_rooted_physeq, 
+                                           method = "wunifrac")
 
 # make a data frame from the sample_data
 # All distance matrices will be the same metadata because they 
@@ -433,6 +447,636 @@ permutest(beta_bray_gut_section)
 Above, our variance is impacted by host. 
 
 Variance is not impacted by gut section
+
+# Taxonomic Composition
+# Phylum colors
+```{r phylum-colors}
+# Set the phylum colors
+ phylum_colors <- c(
+   Actinobacteriota = "darkslategray2",
+   Bacteroidota = "gold",
+   Calditrichota="black",
+   Cloacimonadota = "firebrick",
+   Cyanobacteriota = "limegreen",
+   Deferribacterota = "grey",
+   Desulfobacterota="magenta",
+   Fibrobacterota = "darkgreen",
+   Bacillota = "#3E9B96",
+   Fusobacteriota = "greenyellow",
+   Myxococcota = "#B5D6AA",
+   Planctomycetota = "darkorange",
+   Pseudomonadota = "royalblue",
+  "Rs-K70 termite group" = "green",
+   Spirochaetota = "olivedrab",
+   Verrucomicrobiota = "darkorchid1")
+```
+
+
+```{r genus-colors}
+# Set the phylum colors
+ Genus_colors <- c(
+  Acinetobacter = "coral",
+  "[Anaerorhabdus] furcosa group" = "chartreuse",
+  Akkermansia = "navy",  
+  Alistipes = "deeppink1",
+  Azotobacter = "cadetblue",
+  Anaerovorax = "burlywood4",
+  Bacteroides = "brown",
+  Brevinema = "blueviolet",
+  Breznakia = "blue",
+  "Burkholderia-Caballeronia-Paraburkholderia" = "aquamarine",
+  "Candidatus Bacilloplasma" = "darkslategray",
+  "Candidatus Omnitrophus" = "darkslateblue",
+  Catenococcus = "darkseagreen", 
+  Cellulosilyticum = "darksalmon",
+  Cetobacterium = "darkorchid",
+  Chlamydia = "darkorange",
+  Chryseobacterium = "darkolivegreen",
+  Cloacibacillus = "green3",
+  "Clostridium sensu stricto 1" = "darkkhaki",
+  "Clostridium sensu stricto 13" = "darkgreen",
+  Comamonas = "darkcyan",
+  Colidextribacter = "darkslategray3",
+  Crocinitomix = "coral4",
+  "Christensenellaceae R-7 group" = "greenyellow", 
+  Delftia = "darkgoldenrod",
+  Dermacoccus = "cornflowerblue",
+  Desulfobotulus= "magenta4", 
+  Desulfovibrio="black", 
+  "dgA-11 gut group" = "firebrick",
+  DMER64 = "forestgreen",
+  Dielma = "dodgerblue",
+  DMI = "green",
+  Dokdonella = "lightpink",
+  Endozoicomonas = "gold", 
+  Enterococcus = "lightcoral",
+  Enterovibrio = "lemonchiffon",
+  Erysipelatoclostridium = "lawngreen",
+  Ersipelothrix = "lavenderblush",
+  Epulopiscium = "limegreen",
+  Fibrobacter = "red1",
+  Ferrimonas = "grey", 
+  Ferruginibacter = "indianred",
+  Finefoldia = "midnightblue",
+  Flavobacterium = "mediumvioletred",
+  "GWE2-31-10" = "mediumturquoise",
+  Harryflintia = "mediumpurple",
+  Haliangium = "lightsteelblue",
+  Hassallia = "lightsalmon",
+  Herbaspirillum = "palegreen",
+  "Incertae Sedis" = "orchid",
+  Intestinimonas = "orangered",
+  Janthinobacterium = "olivedrab",
+  Lactobacillus = "moccasin",
+  Macellibacteroides = "slateblue",
+  Mucisprillum = "skyblue",
+  Mailhella = "khaki",
+  Massilia = "seagreen",
+  Methyloversatilis = "sandybrown",
+  Monoglobus = "maroon3",
+  Mucispirillum = "turquoise3",
+  Mycoplasma = "red4",
+  "NK4A214 group" = "purple",
+  OLB8 = "powderblue",
+  Odoribacter ="magenta",
+  Oscillibacter = "yellowgreen",
+  Oxalobacter = "turquoise4",
+  Papillibacter = "tomato",
+  Paludibacter = "thistle",
+  Peredibacter = "steelblue",
+  Photobacterium = "coral4",
+  Pseudomonas = "chartreuse4",
+  Psychrobacter = "deeppink3",
+  Ralstonia = "chocolate",
+  Rikenella = "darkslategray2",
+  "Rikenellaceae RC9 gut group" = "yellow",
+  Ruminococcus = "mediumaquamarine",
+  Romboutsia = "palevioletred1",
+  Shewanella = "brown2",
+  Smithella = "blue3",
+  Sphingobacterium = "bisque4",
+  Sphingomonus = "aquamarine4",
+  Stenotrophomonas = "darkviolet",
+  Syntrophorhabdus = "darkturquoise",
+  "T2WK15B57" = "darkolivegreen4",
+  Terrimonas = "cornsilk",
+  Thermonmonas = "goldenrod",
+  Treponema = "royalblue",
+  Turicibacter = "firebrick4",
+  UTBCD1 = "green4",
+  "UCG-004" = "lightpink1",
+  "UCG-005" = "deeppink",
+  "UCG-008" = "mediumblue",
+  Variovax = "orchid1",
+  Vibrio = "darkolivegreen1",
+  Vicingus = "sienna1")
+```
+
+
+## Multi-species analysis
+### Phyla
+```{r Phylum-analysis}
+# Phylum analysis
+#### Set phylum colors
+#### Plot Phylum Composition
+##### Goal is to calculate the phylum relative abundance
+##### Note: the read depth must be normalized in some way: scaled_reads
+
+  all_fish_phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01))
+
+all_fish_phylum_df %>% 
+  ggplot(aes(x = Sample, y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) 
+ 
+```
+
+```{r P-sexstriatus, fig.width= 12, fig.height=10}
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Pomacanthus sexstriatus"))
+
+# Plot the phylum distributions 
+level_order_ps = 
+   c("568_IV", "E1_IV", "E2_IV", "E3_IV",
+     "568_V", "E1_V", "E2_V", "E3_V", 
+     "E03_V", "E05_V", "581_V", "611_V")
+
+graph <-
+phylum_df %>% 
+ ggplot(aes(x = factor(x = Sample.Name, levels = level_order_ps),
+#   ggplot(aes(x = Sample.Name,
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Pomacanthus sexstriatus"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_ps),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+```{r P-annularis, fig.width= 12, fig.height=10}
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Pomacanthus annularis"))
+
+# Plot the phylum distributions 
+level_order_pa <- 
+    list("AUF006","AUF007")
+
+graph <-
+phylum_df %>% 
+ ggplot(aes(x = factor(x = Sample.Name, levels = level_order_pa),
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Pomacanthus annularis"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_pa),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+```{r K-sydneyanus, fig.width= 12, fig.height=10}
+ level_order_ks <-
+    list("G196_IV", "G197_IV","G198_IV","G199_IV", "G200_IV","G201_IV",
+     "G196_V","G197_V",  "G198_V", "G199_V","G200_V","G201_V")
+
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - 
+    #get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Kyphosus sydneyanus"))
+
+# Plot the phylum distributions 
+  
+graph <-
+phylum_df %>% 
+ ggplot(aes(x = factor(x = Sample.Name, levels = level_order_ks),
+  #ggplot(aes(x = Sample.Name,
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Kyphosus sydneyanus"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_ks),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  #scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+```{r K-cinerascens, fig.width= 12, fig.height=10}
+ level_order_kc <-
+    list( "G135_IV", "G138_IV","G160_IV","G161_IV",       
+          "G179_IV","G184_IV", "M96_IV",  "M235_IV",
+          "G138_V","G160_V", "G161_V","G184_V",
+          "M96_V", "M103_V", "M235_V")
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - 
+    #get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Kyphosus cinerascens"))
+
+# Plot the phylum distributions 
+  
+graph <-
+phylum_df %>% 
+ ggplot(aes(x = factor(x = Sample.Name, levels = level_order_kc),
+#  ggplot(aes(x = Sample.Name,
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Kyphosus cinerascens"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_kc),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+
+```{r K-vaigiensis, fig.width= 12, fig.height=10}
+ level_order_kv <-
+    list("M90_IV",         "M241_IV", "G157_IV","G158_IV", "G159_IV", 
+        "G162_IV", "M90_V",
+        "M104_V", "M241_V",   "G157_V", "G158_V", "G159_V", "G162_V",
+        "M106_V")
+
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - 
+    #get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Kyphosus vaigiensis"))
+
+# Plot the phylum distributions 
+  
+graph <-
+phylum_df %>% 
+ ggplot(aes(x = factor(x = Sample.Name, levels = level_order_kv),
+ # ggplot(aes(x = Sample.Name,
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Kyphosus vaigiensis"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_kv),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+```{r C-flavissima, fig.width= 12, fig.height=10}
+ level_order_cf <-
+    list("CF_107_IV", "CF_110_IV", "CF_120_IV", "CF_122_IV", 
+         "CF_123_IV", "CF_124_IV",  
+        "CF_102_V", "CF_104_V", "CF_105_V", "CF_107_V",
+         "CF_108_V" , "CF_110_V", "CF_112_V", "CF_120_V",
+        "CF_122_V", "CF_123_V", "CF_124_V", "CF_125_V")
+
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - 
+    #get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Centropyge flavissima"))
+
+# Plot the phylum distributions 
+  
+graph <-
+phylum_df %>% 
+   ggplot(aes(x = factor(x = Sample.Name, levels = level_order_cf),
+  #ggplot(aes(x = Sample.Name,
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Centropyge flavissima"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_cf),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+
+```{r C-spp-hybrid, fig.width= 12, fig.height=10}
+   
+  level_order_csh <-
+     list("Hybrid_9_V", "Hybrid_24_V", "Hybrid_28_V", "Hybrid_37_V", 
+          "Hybrid_67_V", "Hybrid_68_V", "Hybrid_83_V", "Hybrid_89_V",
+          "Hybrid_95_V")
+
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - 
+    #get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Centropyge spp. hybrid"))
+
+# Plot the phylum distributions 
+  
+graph <-
+phylum_df %>% 
+   ggplot(aes(x = factor(x = Sample.Name, levels = level_order_csh),
+  #ggplot(aes(x = Sample.Name,
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Centropyge spp. hybrid"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_csh),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+
+```{r C-eibli, fig.width= 12, fig.height=10}
+   
+  level_order_ce <-
+     list("CE_1_V", "CE_10_V", "CE_45_V", "CE_48_V", "CE_51_V", "CE_60_V",
+          "CE_76_V")
+
+  phylum_df <-
+  scaled_rooted_physeq %>%
+  # agglomerate at the phylum level
+  tax_glom(taxrank = "Phylum") %>%
+  # Transform counts to relative abundance
+  transform_sample_counts(function (x) {x/sum(x)}) %>%
+  # Melt to a long format
+  psmelt() %>%
+  # Filter out phyla that are less than one percent - 
+    #get rid of low abundant Phyla
+  dplyr::filter((Abundance > 0.01), 
+                (Host == "Centropyge eibli"))
+
+# Plot the phylum distributions 
+  
+graph <-
+phylum_df %>% 
+   ggplot(aes(x = factor(x = Sample.Name, levels = level_order_ce),
+  #ggplot(aes(x = Sample.Name,
+    y = Abundance, fill = Phylum)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  labs(title = "Phylum Level Composition") +
+  scale_fill_manual(values = phylum_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+  
+plot(graph)
+
+# Genus dataframe
+  genus_df <- 
+  scaled_rooted_physeq %>%
+  tax_glom(taxrank = "Genus") %>% #agglomerate by genus 
+  transform_sample_counts(function(x) {x/sum(x)}) %>% # transform to relative abundances
+  psmelt() %>% #melt pyloseq object into long format df
+  dplyr::filter((Abundance > 0.01), (Host == "Centropyge eibli"))
+
+#plot the genus distributions 
+graph_genus <-
+  genus_df %>% 
+     ggplot(aes(x = factor(x = Sample.Name, levels = level_order_ce),
+    y = Abundance, fill = Genus)) + 
+  geom_bar(stat = "identity", color = "black") +
+  facet_wrap(~Host, scales="free_x") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1), 
+        legend.position = "bottom") +
+  labs(title = "Genus Level Composition") +
+  scale_fill_manual(values = Genus_colors) +
+  labs(x = "Sample",y = "Relative Abundance")
+plot(graph_genus)
+```
+
+# Downloading files
+```{r downloading-files}
+# Downloading otu_table and asv_otu tables for Esther
+
+write.csv(scaled_rooted_physeq@otu_table,
+          "with_pygmy/data/05_Community_Analysis/meta_analysis_otu_table.csv")
+write.csv(scaled_rooted_physeq@tax_table, 
+          "with_pygmy/data/05_Community_Analysis/meta_analysis_tax_table.csv")
+```
+
 
 # Session Information
  For Reproducibility
