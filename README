@@ -1,0 +1,5 @@
+README
+
+Modification to triming sequence tables in DADA2. Prevents redundant ASVs and allows for clean merging of tables.
+
+Goal: To create a trimmed sequence table with no repeating ASVs. Using these functions will allow you to clean up your sequence tables so that MergeSequenceTables can properly merge them.
