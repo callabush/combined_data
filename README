@@ -1,4 +1,4 @@
-README
+README - Trim Sequence Tables
 
 Modification to triming sequence tables in DADA2. Prevents redundant ASVs and allows for clean merging of tables.
 
